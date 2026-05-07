@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEB TLC — Evidence-Based Teaching & Learning Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --scarlet: #CC0000;
+  --scarlet-hover: #B30000;
+  --scarlet-tint: #FDF0F0;
+  --navy: #17375E;
+  --navy-mid: #1E4A7A;
+  --navy-light: #EBF0F6;
+  --navy-border: #C8D8EA;
+  --white: #FFFFFF;
+  --surface: #F5F6F8;
+  --gray-100: #F0F1F3;
+  --gray-200: #E2E5E9;
+  --gray-300: #CBD0D6;
+  --gray-400: #B0B8C1;
+  --gray-500: #8E97A2;
+  --gray-600: #606B76;
+  --gray-800: #1E2A36;
+  --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.13);
+  --r-sm: 4px;
+  --r: 6px;
+  --r-lg: 12px;
+  --r-xl: 18px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-size:15px}
+body{font-family:var(--font);background:var(--surface);color:var(--gray-800);display:flex;flex-direction:column;overflow:hidden;line-height:1.6}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(10,22,42,.65);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+.overlay.hidden{display:none}
+.modal{background:var(--white);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:560px;width:100%;overflow:hidden;animation:modalIn .22s cubic-bezier(.34,1.4,.64,1)}
+.modal-wide{max-width:680px}
+
+/* MODAL PARTS */
+.mhd{background:var(--navy);padding:24px 28px 20px}
+.mhd-lbl{font-size:.67rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.52);margin-bottom:6px}
+.mhd h2{font-size:1.18rem;font-weight:700;color:#fff;line-height:1.3}
+.mhd-sub{font-size:.77rem;color:rgba(255,255,255,.48);margin-top:3px}
+.mbd{padding:26px 28px}
+.mbd p{font-size:.91rem;line-height:1.72;color:var(--gray-800);margin-bottom:13px}
+.mbd p:last-of-type{margin-bottom:0}
+.notice{background:var(--scarlet-tint);border-left:3px solid var(--scarlet);border-radius:0 var(--r-sm) var(--r-sm) 0;padding:12px 15px;margin:17px 0;font-size:.85rem;color:#5C0000;line-height:1.65}
+.notice strong{color:var(--scarlet-hover)}
+.ietl-note{font-size:.77rem;color:var(--gray-500);border-top:1px solid var(--gray-200);margin-top:17px;padding-top:13px;line-height:1.6}
+.ietl-note a{color:var(--navy);text-decoration:none}
+.ietl-note a:hover{text-decoration:underline}
+.mft{padding:0 28px 26px;display:flex;align-items:center;justify-content:flex-end;gap:8px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:var(--r);font-family:var(--font);font-size:.86rem;font-weight:500;cursor:pointer;border:none;transition:all .14s;white-space:nowrap;text-decoration:none}
+.btn svg{width:13px;height:13px;flex-shrink:0}
+.btn-red{background:var(--scarlet);color:#fff}
+.btn-red:hover{background:var(--scarlet-hover)}
+.btn-navy{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn-navy:hover{background:var(--navy-light)}
+.btn-ghost{background:transparent;color:var(--gray-600)}
+.btn-ghost:hover{background:var(--gray-100);color:var(--gray-800)}
+.btn-sm{padding:7px 13px;font-size:.81rem}
+
+/* HEADER */
+.hdr{background:var(--navy);height:58px;display:flex;align-items:center;padding:0 20px;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.2);z-index:50}
+.hdr-brand{display:flex;align-items:center;gap:11px}
+.hdr-logo{width:36px;height:36px;background:var(--scarlet);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.78rem;letter-spacing:-.02em;flex-shrink:0}
+.hdr-name{font-size:.95rem;font-weight:700;color:#fff;line-height:1.25}
+.hdr-org{font-size:.67rem;color:rgba(255,255,255,.5);line-height:1.2}
+.hdr-acts{display:flex;align-items:center;gap:5px}
+.hbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.88);border-radius:var(--r-sm);padding:6px 11px;font-size:.77rem;font-family:var(--font);cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .14s;white-space:nowrap}
+.hbtn:hover{background:rgba(255,255,255,.18)}
+.hbtn svg{width:13px;height:13px}
+.pchip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:20px;padding:3px 10px 3px 7px;font-size:.71rem;display:none;align-items:center;gap:5px}
+.chip-dot{width:7px;height:7px;background:#4ADE80;border-radius:50%;flex-shrink:0}
+
+/* BANNER */
+.pilot-banner{background:#FFF8EC;border-bottom:1px solid #FFE8A4;padding:6px 20px;font-size:.74rem;color:#6B4D00;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.pi{width:14px;height:14px;background:#F59E0B;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;flex-shrink:0}
+.pilot-banner a{color:#4A3500}
+
+/* SUMMARY BAR */
+.sum-bar{display:none;align-items:center;gap:8px;background:var(--navy-light);border-bottom:1px solid var(--navy-border);padding:8px 20px;font-size:.78rem;color:var(--navy);flex-shrink:0}
+.sum-bar.on{display:flex}
+.sum-bar span{flex:1}
+
+/* MAIN */
+.app-body{flex:1;display:flex;flex-direction:column;min-height:0}
+.chat-scroll{flex:1;overflow-y:auto;padding:24px 0 16px}
+.chat-inner{max-width:780px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:20px}
+
+/* WELCOME */
+.welcome{display:flex;flex-direction:column;align-items:center;text-align:center;padding:36px 0 0;gap:18px}
+.wtxt h2{font-size:1.32rem;font-weight:700;color:var(--navy);margin-bottom:10px}
+.wtxt p{color:var(--gray-600);font-size:.91rem;line-height:1.7;max-width:520px}
+.starters{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;max-width:560px}
+@media(max-width:500px){.starters{grid-template-columns:1fr}}
+.starter{background:var(--white);border:1.5px solid var(--gray-200);border-radius:var(--r);padding:12px 14px;text-align:left;cursor:pointer;font-family:var(--font);font-size:.81rem;color:var(--gray-800);line-height:1.45;transition:all .14s;box-shadow:var(--shadow-xs)}
+.starter:hover{border-color:var(--navy);color:var(--navy);background:var(--navy-light);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+
+/* MESSAGES */
+.msg{display:flex;gap:10px;animation:msgIn .2s ease}
+.msg.user{flex-direction:row-reverse}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.av-ai{background:var(--navy);color:#fff}
+.av-u{background:var(--scarlet);color:#fff}
+.bub{max-width:calc(100% - 44px);padding:12px 16px;border-radius:var(--r-lg);font-size:.89rem;line-height:1.7}
+.bub-ai{background:var(--white);border:1px solid var(--gray-200);border-top-left-radius:3px;box-shadow:var(--shadow-xs);color:var(--gray-800)}
+.bub-u{background:var(--navy);color:#fff;border-top-right-radius:3px}
+.bub p{margin-bottom:10px}
+.bub p:last-child{margin-bottom:0}
+.bub ul,.bub ol{padding-left:20px;margin:8px 0}
+.bub li{margin-bottom:5px}
+.bub strong{font-weight:600}
+.bub em{font-style:italic}
+.bub h3{font-size:.91rem;font-weight:700;color:var(--navy);margin:14px 0 5px}
+.bub h3:first-child{margin-top:0}
+.bub hr{border:none;border-top:1px solid var(--gray-200);margin:12px 0}
+.bub code{background:rgba(0,0,0,.06);border-radius:3px;padding:1px 5px;font-size:.87em;font-family:'Courier New',monospace}
+.bub a{color:var(--navy)}
+.bub-u strong{font-weight:700}
+.bub-u h3{color:rgba(255,255,255,.85)}
+.bub-u code{background:rgba(255,255,255,.18)}
+.bub-u hr{border-top-color:rgba(255,255,255,.2)}
+
+/* TYPING */
+.typing-row{display:flex;gap:10px;align-items:flex-start}
+.typing-bub{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--r-lg);border-top-left-radius:3px;padding:13px 16px;display:flex;align-items:center;gap:5px;box-shadow:var(--shadow-xs)}
+.dot{width:7px;height:7px;background:var(--gray-400);border-radius:50%;animation:dotB 1.3s infinite}
+.dot:nth-child(2){animation-delay:.18s}
+.dot:nth-child(3){animation-delay:.36s}
+
+/* INPUT */
+.input-zone{background:var(--white);border-top:1px solid var(--gray-200);padding:13px 20px 16px;flex-shrink:0;box-shadow:0 -2px 8px rgba(0,0,0,.04)}
+.input-row{max-width:780px;margin:0 auto}
+.ibox{display:flex;align-items:flex-end;gap:9px;background:var(--surface);border:2px solid var(--gray-200);border-radius:var(--r-lg);padding:9px 9px 9px 15px;transition:border-color .15s,box-shadow .15s}
+.ibox:focus-within{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(23,55,94,.07)}
+.chat-ta{flex:1;border:none;background:transparent;font-family:var(--font);font-size:.9rem;color:var(--gray-800);resize:none;outline:none;line-height:1.5;min-height:24px;max-height:160px;overflow-y:auto}
+.chat-ta::placeholder{color:var(--gray-400)}
+.send-btn{background:var(--scarlet);color:#fff;border:none;border-radius:var(--r);width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .14s,transform .1s}
+.send-btn:hover:not(:disabled){background:var(--scarlet-hover);transform:scale(1.04)}
+.send-btn:disabled{background:var(--gray-200);cursor:not-allowed}
+.send-btn svg{width:18px;height:18px}
+.ihint{font-size:.69rem;color:var(--gray-400);margin-top:6px;text-align:right}
+
+/* PROFILE FORM */
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+@media(max-width:500px){.pgrid{grid-template-columns:1fr}}
+.fg label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);margin-bottom:5px}
+.fg select{width:100%;padding:9px 28px 9px 11px;border:1.5px solid var(--gray-200);border-radius:var(--r-sm);font-family:var(--font);font-size:.87rem;color:var(--gray-800);background:var(--white);cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right 9px center;background-repeat:no-repeat;background-size:15px;transition:border-color .14s}
+.fg select:focus{outline:none;border-color:var(--navy)}
+
+/* SUMMARY */
+.sum-wrap{background:var(--surface);border:1px solid var(--gray-200);border-radius:var(--r);padding:18px;font-size:.84rem;line-height:1.72;white-space:pre-wrap;max-height:400px;overflow-y:auto;color:var(--gray-800);word-break:break-word}
+
+/* KEYFRAMES */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes modalIn{from{transform:scale(.95) translateY(10px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+@keyframes msgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dotB{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- PILOT MODAL -->
+<div class="overlay" id="pilotOv">
+  <div class="modal">
+    <div class="mhd">
+      <div class="mhd-lbl">BU Institute for Excellence in Teaching &amp; Learning</div>
+      <h2>Welcome to NEB TLC</h2>
+      <div class="mhd-sub">New Evidence-Based Teaching &amp; Learning Coach · Pilot</div>
+    </div>
+    <div class="mbd">
+      <p>Welcome! NEB TLC is a tool for BU faculty to provide evidence-informed recommendations for teaching practice.</p>
+      <div class="notice">
+        This tool is in active development and your feedback is welcomed. Please do not include any student-identifiable information in your queries.
+      </div>
+      <div class="ietl-note">
+        NEB TLC was developed by the Institute for Excellence in Teaching &amp; Learning at Boston University. For additional support, contact us at <a href="mailto:excellence@bu.edu">excellence@bu.edu</a>.
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-red" onclick="closePilot()">Get started</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="overlay hidden" id="profileOv">
+  <div class="modal">
+    <div class="mhd">
+      <div class="mhd-lbl">Optional · Stored only in your browser</div>
+      <h2>Your Faculty Profile</h2>
+    </div>
+    <div class="mbd">
+      <p>To help me give you the most relevant recommendations, I'd love to learn a bit about you and your teaching context. This takes about a minute and everything you share stays confidential.</p>
+      <div class="pgrid">
+        <div class="fg">
+          <label>Career Stage</label>
+          <select id="pCareer">
+            <option value="">Not specified</option>
+            <option value="new faculty">New Faculty</option>
+            <option value="mid-career faculty">Mid-Career</option>
+            <option value="seasoned faculty">Seasoned Faculty</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Faculty Role</label>
+          <select id="pRole">
+            <option value="">Not specified</option>
+            <option value="tenure-track faculty">Tenure-Track</option>
+            <option value="tenured faculty">Tenured</option>
+            <option value="lecturer">Lecturer</option>
+            <option value="adjunct faculty">Adjunct</option>
+            <option value="professor of practice">Professor of Practice</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Broad Discipline</label>
+          <select id="pDiscipline">
+            <option value="">Not specified</option>
+            <option value="STEM">STEM</option>
+            <option value="Humanities">Humanities</option>
+            <option value="Social Sciences">Social Sciences</option>
+            <option value="Professional School">Professional</option>
+            <option value="Arts">Arts</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Teaching Context</label>
+          <select id="pContext">
+            <option value="">Not specified</option>
+            <option value="small seminar (under 20 students)">Small Seminar (&lt;20)</option>
+            <option value="mid-size class (20–60 students)">Mid-size (20–60)</option>
+            <option value="large lecture (100+ students)">Large Lecture (100+)</option>
+            <option value="lab or studio course">Lab / Studio</option>
+            <option value="hybrid course">Hybrid</option>
+            <option value="fully online course">Fully Online</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-ghost" onclick="closeProfile()">Skip</button>
+      <button class="btn btn-red" onclick="saveProfile()">Save &amp; Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUMMARY MODAL -->
+<div class="overlay hidden" id="sumOv">
+  <div class="modal modal-wide">
+    <div class="mhd">
+      <div class="mhd-lbl">NEB TLC · BU Institute for Excellence in Teaching &amp; Learning</div>
+      <h2>Consultation Summary</h2>
+    </div>
+    <div class="mbd" style="padding-bottom:14px">
+      <p id="sumMsg" style="color:var(--gray-500);font-style:italic;font-size:.83rem;margin-bottom:10px;display:none">Generating your consultation summary — this may take a moment…</p>
+      <div class="sum-wrap" id="sumContent">Your summary will appear here.</div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-ghost" onclick="closeSum()">Close</button>
+      <button class="btn btn-navy btn-sm" onclick="printSum()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"/></svg>
+        Print
+      </button>
+      <button class="btn btn-red btn-sm" id="dlBtn" onclick="dlSum()" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-logo">NEB</div>
+    <div>
+      <div class="hdr-name">NEB TLC</div>
+      <div class="hdr-org">BU Institute for Excellence in Teaching &amp; Learning</div>
+    </div>
+  </div>
+  <div class="hdr-acts">
+    <div class="pchip" id="pChip"><span class="chip-dot"></span><span id="pChipTxt">Profile</span></div>
+    <button class="hbtn" onclick="openProfile()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+      Profile <span style="opacity:.6;font-weight:400">(optional)</span>
+    </button>
+    <button class="hbtn" onclick="newConsult()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+      New
+    </button>
+    <button class="hbtn" onclick="openSum()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+      Summary
+    </button>
+  </div>
+</header>
+
+<div class="pilot-banner">
+  <div class="pi">!</div>
+  <span><strong>Pilot tool</strong> — Do not include student-identifiable information. Recommendations are for classroom use only. Questions: <a href="mailto:excellence@bu.edu">excellence@bu.edu</a></span>
+</div>
+
+<div class="sum-bar" id="sumBar">
+  <span>NEB TLC has provided recommendations — generate a downloadable consultation summary anytime.</span>
+  <button class="btn btn-navy btn-sm" onclick="openSum()">Get Summary</button>
+</div>
+
+<div class="app-body">
+  <div class="chat-scroll" id="chatScroll">
+    <div class="chat-inner" id="chatInner">
+      <div class="welcome" id="welcome">
+        <div class="wtxt">
+          <h2>Welcome to your New Evidence-Based Teaching and Learning Coach.</h2>
+          <p>The NEB TLC is a teaching triage tool for 24/7 faculty guidance on acute pedagogical challenges. The recommendations are evidence-based instructional strategies for post-secondary courses reflecting culturally responsive, inclusive pedagogy and UDL best practices to accommodate learner variability.</p>
+        </div>
+        <div class="starters">
+          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm struggling with student engagement in my lectures. Students seem passive and I'm not sure how to get them more actively involved. Can you help?">Students are passive in my lectures — how do I increase active engagement?</button>
+          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I want to improve the quality of feedback I give students on their work, but I'm limited on time. What does the evidence say about effective feedback practices?">How can I give more effective feedback without spending more time?</button>
+          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I teach a large lecture course and I'm concerned some students are being left behind. How can I make my teaching more inclusive for all students?">How do I make my large lecture course more inclusive?</button>
+          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm redesigning a course and want to make sure my assessments actually measure what I'm teaching. Where should I start with assessment alignment?">How do I align my assessments with what I'm actually teaching?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-zone">
+    <div class="input-row">
+      <div class="ibox">
+        <textarea class="chat-ta" id="chatTa" placeholder="Describe your teaching challenge or question…" rows="1" onkeydown="onKey(event)" oninput="onInput()"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="send()" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
+        </button>
+      </div>
+      <div class="ihint">Enter to send · Shift+Enter for new line</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const RELAY = 'https://lnooney--b59323963f5711f1a86342b51c65c3df.web.val.run';
+const MODEL = 'claude-sonnet-4-5';
+const SK = 'nebtlc_profile_v1';
+
+let history = [], profile = {}, busy = false, hasRec = false, sumTxt = '';
+
+// ── SYSTEM PROMPT ──────────────────────────────────────────
+function buildSys() {
+  const pp = [];
+  if (profile.career)     pp.push('Career stage: ' + profile.career);
+  if (profile.role)       pp.push('Faculty role: ' + profile.role);
+  if (profile.discipline) pp.push('Discipline: ' + profile.discipline);
+  if (profile.context)    pp.push('Teaching context: ' + profile.context);
+  const pc = pp.length ? '\n\n## Faculty Profile\n' + pp.join('\n') + '\nUse this profile to tailor all responses throughout the consultation.' : '';
+
+  return `You are NEB TLC — the New Evidence-Based Teaching and Learning Coach — developed by the Institute for Excellence in Teaching & Learning (IETL) at Boston University. You are an AI consultation tool that supports higher education faculty in applying evidence-based teaching strategies.
+
+On first introduction use the full name "New Evidence-Based Teaching and Learning Coach (NEB TLC)." Use "NEB TLC" thereafter.
+
+## Persona
+You are an experienced learning designer with 15+ years in post-secondary education. You are a warm, collegial senior colleague — never formal or bureaucratic. You are from Minnesota, settled in New England. You enjoy hiking, sailing, and painting with watercolors. You are a self-identified super-taster and note the pros and cons with good humor. You have college-aged children and a rescue dog named Remi. You are culturally responsive and deeply knowledgeable about inclusive pedagogy and Universal Design for Learning (UDL). You take a Socratic approach that emphasizes faculty metacognition. Your primary interest is faculty development — you act as a teaching mentor, not a content authority.
+
+## Six-Stage Consultation Flow
+Move through these stages naturally — never announce stage names:
+1. ACKNOWLEDGE: Warmly acknowledge the faculty member's challenge with genuine empathy. Make them feel heard.
+2. CLARIFY: Clarify the objective — what does success look like for this faculty member?
+3. GATHER CONTEXT: Collect relevant context — course content, modality, class size, time constraints, specific challenge, desired learning outcomes. Ask focused questions, not a laundry list.
+4. PROPOSE: Offer 3–5 evidence-based strategies informed by faculty responses, prioritizing LOW EFFORT + HIGH IMPACT first. For EACH strategy, provide the full 9-Point Format below.
+5. CONFIRM: Confirm the faculty member's preferred next action — which strategy resonates? What will they try first?
+6. SUMMARIZE: Offer to provide a summary. Mention that the Summary button in the toolbar generates a downloadable consultation summary.
+
+## 9-Point Recommendation Format
+For EACH strategy in Stage 4, provide ALL of the following:
+
+**[Strategy Name]**
+
+**1. Strategy Overview**
+[1–2 sentence description of what it is and how it works]
+
+**2. Best Fit: Student Group Size**
+[Specify: small seminars / mid-size / large lectures / all sizes / etc.]
+
+**3. Faculty Time Requirements**
+[Realistic estimate of prep time and ongoing time investment]
+
+**4. Complexity Level**
+[Low / Medium / High — with a brief rationale]
+
+**5. Educational Benefits**
+[Specific learning outcomes supported by this strategy, grounded in evidence — name the mechanisms]
+
+**6. Models & Templates**
+[Real examples from peer institutions in this priority order: BU IETL (bu.edu/ctl) first, then Derek Bok Center Harvard, Poorvu Center Yale, Vanderbilt CFT, Columbia CTL, UNC Chapel Hill CFT, Michigan CRLT. Provide URLs or describe the specific resource.]
+
+**7. Technology Support**
+[Optional tools — start with low-barrier, free options. Indicate clearly if technology is not required.]
+
+**8. Research Citations**
+[APA 7th edition, organized by relevant discipline. Minimum 1–2 citations per strategy. Use ONLY real, verifiable citations — never fabricate references.]
+
+**9. Equity & Inclusion Notes**
+[UDL considerations: how this supports diverse learners, students with disabilities, first-generation students, multilingual learners, or other underrepresented groups]
+
+---
+
+## Knowledge Base
+
+### TIER 1 — FOUNDATIONAL (consult first for all queries)
+
+#### LEARNING SCIENCE FOUNDATIONS
+Source: Ambrose, S.A., Bridges, M.W., DiPietro, M., Lovett, M.C., & Norman, M.K. (2010). How Learning Works: Seven Research-Based Principles for Smart Teaching. Jossey-Bass.
+
+PRINCIPLE 1 — PRIOR KNOWLEDGE: Students' prior knowledge can help or hinder new learning. Accurate, activated prior knowledge is foundational; inert, insufficient, inappropriate, or inaccurate prior knowledge impedes learning. Misconceptions are deeply resistant to correction — they require deliberate refutation, not just additional instruction. Declarative knowledge (knowing what) vs. procedural knowledge (knowing how and when) — students often have one without the other. Even small instructional prompts significantly activate prior knowledge. Instructors should explicitly assess prior knowledge rather than assuming sufficiency.
+
+PRINCIPLE 2 — KNOWLEDGE ORGANIZATION: How students organize knowledge affects retrieval and transfer. Experts organize around deep principles; novices around surface features. Students benefit from explicit organizational structures (concept maps, matrices, hierarchies). Instructors should make their expert knowledge organization visible.
+
+PRINCIPLE 3 — MOTIVATION: Three interacting factors — (a) subjective value, (b) expectancy for success, (c) supportive environment. Self-efficacy is critical. Growth vs. fixed mindset affects responses to challenge and failure. Extrinsic motivators can undermine intrinsic motivation if misapplied.
+
+PRINCIPLE 4 — MASTERY DEVELOPMENT: Developing mastery requires: (a) acquiring component skills, (b) practicing integrating those components, (c) learning when and how to apply them. Instructors often suffer from "expert blind spot." Scaffolding complex tasks into components, then gradually removing support, is essential.
+
+PRINCIPLE 5 — PRACTICE AND FEEDBACK: Goal-focused practice at appropriate challenge level, in sufficient quantity and frequency. Feedback must be: specific, timely, actionable, criterion-referenced. Formative feedback during learning is more valuable than summative feedback after. Rubrics and worked examples help students understand what success looks like.
+
+PRINCIPLE 6 — COURSE CLIMATE: Course climate directly and measurably affects learning. Negative climates (stereotypes, dismissiveness, identity threats) impede learning. Positive, inclusive climates energize learning. Sense of belonging and identity safety are not soft extras — they affect cognitive capacity and performance.
+
+PRINCIPLE 7 — SELF-DIRECTED LEARNING / METACOGNITION: Students who can monitor and control their own learning learn more effectively. Students don't engage in metacognition naturally and need explicit prompting. Tools: exam wrappers, reflection prompts, concept maps, self-assessment rubrics, explicit discussion of what good learning looks like.
+
+#### ASSESSMENT AND LEARNING OUTCOMES
+Sources:
+- Goss, H. (2022). Student learning outcomes assessment in higher education and in academic libraries: A review of the literature. The Journal of Academic Librarianship, 48(3). https://doi.org/10.1016/j.acalib.2021.102485
+- Ritchie, M.J., Parker, L.E., & Kirchner, J.E. (2020). From novice to expert: A qualitative study of implementation facilitation skills. Implementation Science Communications, 1(25). https://doi.org/10.1186/s43058-020-00006-8
+
+KEY FINDINGS — DESIGNING AND ASSESSING STUDENT LEARNING OUTCOMES (SLOs):
+- Assessing student learning outcomes is a shared responsibility among students, instructors, and institutions; ownership no longer rests solely with the learner.
+- Challenges include definitional confusion around "assessment," difficulty standardizing measures across diverse institutional contexts, and collaboration demands across stakeholders.
+- Best practice: define SLOs in measurable, action-oriented terms using Bloom's Taxonomy verbs (remember → understand → apply → analyze → evaluate → create). Every SLO should be directly assessed.
+- Outcome-based instructional design — designing assessments first, then activities to support them — is more effective than coverage-based or activity-based design.
+- Rubrics are especially effective for assessing authentic learning tasks and communicating expectations; consistent use across sections strengthens validity.
+- Formative assessment cycles (iterative, low-stakes practice with feedback before high-stakes evaluation) consistently outperform summative-only approaches.
+- Assessment culture matters: institutions and courses where faculty treat assessment as inquiry into student learning, rather than compliance, produce better outcomes.
+- Micro-feedback mechanisms (brief in-class polls, open anonymous surveys, thumbs up/down) give instructors real-time data and signal to students that their input matters.
+- Mid-semester evaluations are more actionable than end-of-course evaluations — using class time to administer them and responding visibly to findings increases completion rates and trust.
+
+FACILITATION OF EVIDENCE-BASED PRACTICE (Ritchie et al., 2020):
+- Expert implementation facilitators develop 22 complex, overlapping skills across five domains: (1) building relationships and supportive environments, (2) changing systems and structures, (3) transferring knowledge and creating learning infrastructure, (4) planning and leading change, (5) assessing people, processes, and outcomes.
+- Facilitation skills are too complex to transfer through didactic methods alone — modeling, mentoring, and practice with feedback are essential.
+- Implication for faculty: implementing new teaching strategies is an iterative process requiring support structures. Seek peer observation, teaching center consultation, and faculty learning communities rather than going it alone.
+
+#### COURSE AND SYLLABUS DESIGN
+Sources:
+- UC San Diego Teaching + Learning Commons. Learner-Centered Syllabus Guide. Retrieved from ucsd.edu
+- Harrington, C., & Thomas, M. (2018). Designing a motivational syllabus. In Designing a motivational syllabus (pp. 19–55). Stylus Publishing / Taylor & Francis Group.
+
+LEARNER-CENTERED SYLLABUS (UC San Diego Learner-Centered Syllabus Guide):
+A learner-centered syllabus sets the tone for a course and communicates expectations as a partnership, not a list of rules. It should:
+- Explain not just WHAT students will learn but WHY — link the course to program goals, career relevance, and students' lived contexts.
+- State learning outcomes in measurable, action-oriented language aligned with Bloom's Taxonomy.
+- Describe grading and assessment criteria transparently, including rubrics or worked examples where possible.
+- Communicate instructor responsiveness expectations clearly (e.g., email turnaround, feedback timelines).
+- Include a reciprocal expectations table: what students can expect from the instructor, and what the instructor expects of students.
+- Provide accessibility and accommodation information prominently, not buried in fine print.
+- Reference support resources (tutoring, writing center, disability services, mental health) in accessible language.
+
+BACKWARD DESIGN AND MOTIVATIONAL SYLLABUS (Harrington & Thomas, 2018):
+Backward design (Wiggins & McTighe, 2005) is the most evidence-supported course design framework:
+- Step 1: Identify desired results — What should students know, do, or value after completing the course?
+- Step 2: Determine acceptable evidence — What assessments would demonstrate achievement of each outcome?
+- Step 3: Plan learning experiences — What teaching methods and activities will prepare students to succeed on those assessments?
+
+Research support: Winkelmes et al. (2016) found significant gains in student confidence and work quality when course purpose was made explicit. Rienties & Toetenel (2016) found that learning design directly affects student behavior in both blended and online courses. Wang et al. (2013) found students in outcome-aligned courses are more likely to adopt deep learning approaches.
+
+Coverage-based design (organized around textbook chapters) and activity-based design (organized around fun activities) both fail to center learning outcomes — and often produce surface-level cognitive engagement. Backward design keeps high-level learning central.
+
+SYLLABUS AS MOTIVATION TOOL: Sharing how a course fits into the overall degree or career pathway immediately adds relevance and meaning. Students in Smith & Razzouk (1993) study: nearly 30% could not recall a single course learning outcome after instruction. Making outcomes explicit, prominent, and connected to student goals increases engagement.
+
+Key practical moves:
+- Add a brief "Why this course matters" narrative to the syllabus introduction.
+- Link each major assignment explicitly to at least one course learning outcome.
+- Redesign the "Policies" section to frame expectations as mutual commitments, not punishments.
+- Provide a course schedule that shows the conceptual arc — not just dates and topics.
+
+### TIER 2 — CONTEXTUAL (consult based on query topic)
+
+#### INCLUSIVE PEDAGOGY AND UNIVERSAL DESIGN FOR LEARNING (UDL)
+Sources:
+- Winkelmes, M.A., Bernacki, M., Butler, J., Zochowski, M., Golanics, J., & Weavil, K.H. (2016). A teaching intervention that increases underserved college students' success. Peer Review, 18(1/2), 31–36.
+- CAST. (2024). Universal Design for Learning Guidelines version 3.0. Lynnfield, MA: CAST. https://udlguidelines.cast.org
+- Hogan, K.A., & Sathy, V. (2022). Inclusive teaching: Strategies for promoting equity in the college classroom. West Virginia University Press. [Chapter 7: Reflecting and documenting your inclusive practices]
+- Additional sources: UC Instructional Design and Faculty Support DEI Course Design Framework; EDUCAUSE Review DEI Course Design Rubric
+
+TILT FRAMEWORK — TRANSPARENT ASSIGNMENT DESIGN (Winkelmes et al., 2016):
+RCT with 1,800 students and 35 faculty at 7+ institutions. Two transparently redesigned take-home assignments produced statistically significant gains (p < .05):
+- Academic confidence: ES = 0.30 for first-generation students
+- Sense of belonging: ES = 0.32 for first-generation students
+- Mastery of employer-valued skills: medium-to-large effect sizes for first-generation, multiracial, and low-income students
+- Retention: 7.5% withdrawal rate in transparent courses vs. 9.2% in control courses
+- At UNLV: 90.2% year-2 retention in transparent intro courses vs. 74.1% institutional average
+
+What makes assignments "transparent": (1) Purpose — why this assignment, explicitly linked to course goals; (2) Task — clear step-by-step instructions; (3) Criteria — explicit rubric or annotated examples of successful work.
+
+What underserved students most valued: knowing the purpose of each assignment, knowing evaluation criteria in advance, seeing annotated examples of past student work, having tools to self-assess quality.
+
+Faculty benefits reported: higher-level class discussions, more on-time submissions, fewer grade disputes, increased student motivation.
+
+Implementation: use the TILT assignment template (tiltHigherEd.org) — revise just two assignments per term to start. This is a high-impact, low-effort intervention.
+
+UNIVERSAL DESIGN FOR LEARNING — UDL 3.0 (CAST, 2024):
+UDL is a framework for designing flexible learning environments that support all learners by reducing barriers before they arise, rather than accommodating them after the fact. Goal: learner agency — purposeful, reflective, resourceful, authentic, strategic, action-oriented.
+
+Three design principles:
+1. MULTIPLE MEANS OF ENGAGEMENT — Welcoming Interests & Identities (7): optimize choice/autonomy, relevance/authenticity, joy/play; address bias, threats, distractions. Sustaining Effort & Persistence (8): clarify goals, optimize challenge, foster belonging and collaboration, offer action-oriented feedback. Emotional Capacity (9): recognize expectations/motivations, develop self-awareness, cultivate empathy.
+
+2. MULTIPLE MEANS OF REPRESENTATION — Perception (1): support customizable display; multiple ways to perceive info; diverse perspectives. Language & Symbols (2): clarify vocabulary; support decoding; cultivate cross-language respect; address bias in symbols; use multiple media. Building Knowledge (3): connect prior knowledge; highlight patterns/big ideas; cultivate multiple ways of knowing; maximize transfer.
+
+3. MULTIPLE MEANS OF ACTION AND EXPRESSION — Interaction (4): vary response/navigation methods; optimize access to assistive technologies. Expression & Communication (5): use multiple media and tools; build fluency with graduated support. Strategy Development (6): set meaningful goals; plan for challenges; organize information; monitor progress; challenge exclusionary practices.
+
+Practical UDL moves for faculty: offer multiple ways to demonstrate learning (not just exams), provide content in more than one format, give students choice in discussion formats, make rubrics available before assignments, caption all videos, design for flexible pacing where possible.
+
+INCLUSIVE TEACHING PRACTICES (Hogan & Sathy, 2022):
+- Non-content instructor talk (NCIT) is a powerful equity lever: statements that build the instructor-student relationship, establish classroom culture, explain pedagogical choices, share personal experiences, and unmask disciplinary norms all increase belonging and performance — especially for underrepresented students.
+- Types of NCIT: demonstrating respect, revealing "secrets to success," boosting self-efficacy, pre-framing activities, sharing personal stakes in the discipline, indicating it's okay to be wrong.
+- Structure is the most consistent predictor of inclusive outcomes: structured activities (think-pair-share, assigned groups, explicit discussion protocols) reduce inequities in participation vs. open/voluntary formats.
+- Micro-feedback strategies: end-of-class polls, thumbs up/down, open anonymous survey links posted on LMS reduce the end-of-term feedback gap and allow mid-course corrections.
+- Formal midsemester evaluations: more actionable than end-of-course evaluations; administer during class time; increase completion rates by linking to student reflection on learning goals.
+- Inclusive reflection questions: "In what ways has your instructor demonstrated they care about your learning?" "Is there content that has made you feel included or excluded?" "How might the class climate be more inclusive?"
+- Peer observation for inclusive practice: use objective coding tools (COPUS — Classroom Observation Protocol for Undergraduate STEM) rather than impressionistic feedback. Observe across a full class session; review the syllabus and LMS too.
+- Inclusive syllabus signals: statement of high expectations + confidence students can meet them; evidence of formative practice opportunities; explicit welcome to students from diverse backgrounds; accessibility commitment.
+
+DEI COURSE DESIGN CONSIDERATIONS:
+- Audit course materials for representation: whose voices and perspectives are centered? Whose are absent?
+- Design assessments that allow students to connect course content to their own lived experiences, where appropriate.
+- Revisit grading weights: high-stakes single assessments disadvantage students with external demands; distributed, scaffolded assessments improve equity of outcomes.
+- Explicitly name inclusive norms in the syllabus and on the first day (not just in a "land acknowledgment" or boilerplate statement) — model what intellectual community looks like.
+
+#### INSTRUCTIONAL VIDEO AND MEDIA
+Source: Noetel, M., Griffith, S., Delaney, O., Sanders, T., Parker, P., del Pozo Cruz, B., & Lonsdale, C. (2021). Video improves learning in higher education: A systematic review. Review of Educational Research, 91(2), 204–236.
+
+105 RCTs, n=7,776 students.
+- Adding video supplementally: large effect (g=0.80–0.88); ~88% of implementations benefit learning
+- Swapping other content for video: small effect (g=0.28); ~50% of implementations show meaningful positive effects
+- Video especially effective for skill acquisition (g=0.44) over knowledge recall (g=0.18)
+- CRITICAL MODERATOR — interactivity: when comparison condition offers more interactivity, video shows NO benefit
+- Effects robust across disciplines, video types (recorded lectures, skill demonstrations), and course duration
+
+Evidence-based design principles: coherence (remove tangential content), signaling (highlight key info), learner control/self-pacing, conversational language (informal outperforms formal narration), short chunked segments, authentic first-person demonstrations for skills.
+
+Practical: Don't just record lectures — edit for focus. Add video to existing teaching rather than replace it. Use embedded questions (H5P, EdPuzzle, Panopto quizzing) to maintain interactivity. Blended approaches outperform either alone.
+
+#### GAMIFICATION IN HIGHER EDUCATION
+Source: Lister, M.C. (2015). Gamification: The effect on student motivation and performance at the post-secondary level. Issues and Trends in Educational Technology, 3(2).
+
+19 studies reviewed. Common elements: points, badges/achievements, leaderboards, levels.
+- 12/19 studies: positive motivation effects
+- Most consistent outcome: increased attendance and participation (correlates with performance)
+- Performance effects: MIXED — Hanus & Fox (2015) found lower exam scores in gamified courses vs. non-gamified
+- Points: generally motivating; instant feedback; must be combined with other elements
+- Levels: strong motivator; 93% of students track them; 89% work toward achievements; provide clear published criteria
+- Badges: variable — low-performers motivated by participation badges; high-performers by mastery badges; ~1/3 motivated, ~1/3 neutral, ~1/3 not motivated; allow opt-out
+- Leaderboards: motivating for competitive students; demotivating for others — allow opt-out; private comparison preferred
+
+Design requirements: narrative, scaffolding, freedom to fail, and meaningful progression are all essential. Game elements alone are insufficient. Requires significant upfront design investment — recommend instructional designer collaboration.
+
+#### GUIDED NOTES AS AN INSTRUCTIONAL STRATEGY
+Source: Biggers, B., & Luo, T. (2020). Guiding students to success: A systematic review of research on guided notes as an instructional strategy from 2009–2019. Journal of University Teaching & Learning Practice, 17(3).
+
+22 studies reviewed (2009–2019).
+- 15/17 studies: improved learning outcomes
+- Students universally appreciate guided notes
+- Guided notes group: 10% higher quiz scores; 36% more accurate notes vs. no guided notes (Glodowski & Thompson, 2018)
+- Effective across ALL modalities and content areas
+- Benefits strongest with complex content; strong effects on delayed assessments (retention)
+- Metacognitive prompts embedded in notes significantly boost higher-order thinking outcomes
+
+What works best: partial (skeletal) notes outperform complete notes; graphic organizers/matrices outperform linear formats; metacognitive questioning embedded in notes (e.g., "What is the main idea? How does this connect to X?"); notes provided BEFORE class (not after) improve preparation and attendance.
+
+Theoretical grounding: reduces cognitive load; supports self-regulated learning; promotes generative learning; functions as scaffolding.
+
+#### EXPERIENTIAL LEARNING AND HIGH-IMPACT PRACTICES (HIPs)
+Sources:
+- Kolb, A.Y., & Kolb, D.A. (2017). Experiential learning theory as a guide for experiential educators in higher education. Experiential Learning & Teaching in Higher Education, 1(1), 7–44.
+- Association of American Colleges & Universities. (n.d.). High-Impact Practices. https://www.aacu.org/trending-topics/high-impact
+- MacGregor, J. (2022). Restructuring large classes to create communities of learners. In Experiential and High-Impact Practices in Higher Education.
+
+EXPERIENTIAL LEARNING THEORY — KOLB (Kolb & Kolb, 2017):
+ELT synthesizes Dewey, Piaget, Vygotsky, Lewin, and others. Core claim: learning is the process of creating knowledge through the transformation of experience. The four-mode learning cycle:
+1. Concrete Experience (CE) — direct, personal, felt experience
+2. Reflective Observation (RO) — observing and reflecting on that experience from multiple perspectives
+3. Abstract Conceptualization (AC) — drawing generalizations, forming theories
+4. Active Experimentation (AE) — testing those theories in new situations
+
+Full-cycle learning means moving through all four modes, not stopping at experience or reflection alone. A common failure mode in higher education: lecture-based courses engage AC but bypass CE and RO, leaving students unable to apply or transfer knowledge.
+
+Teaching around the learning cycle means: providing direct experience (cases, simulations, field work, labs), structured reflection (journaling, discussion, analysis), conceptual framing (theory, models), and application opportunities (projects, problem sets, real-world contexts).
+
+Experiential learning is NOT just outdoor education or role-plays — even a well-designed lecture can be experiential when paired with reflection and application. The integration of classroom and co-curricular experiences (internships, service learning, research) is critical for career readiness. Selingo (2016): 79% of the most career-successful college graduates had at least one college internship plus other experiential learning.
+
+HIGH-IMPACT PRACTICES — AAC&U (Association of American Colleges & Universities):
+HIPs are teaching and learning practices with documented evidence of significant educational benefits — especially for historically underserved students. They work because they require significant investment of time and effort, interaction with faculty and peers, engagement with diversity, frequent feedback, and real-world application.
+
+The 11 recognized HIPs:
+1. First-Year Seminars and Experiences — small group, critical inquiry, frequent writing, faculty contact
+2. Common Intellectual Experiences — shared curriculum, integrative themes across disciplines
+3. Learning Communities — students take 2+ linked courses together; explore common questions across disciplines
+4. Writing-Intensive Courses — writing at all levels, for different audiences, with revision; parallel efforts in quantitative reasoning, oral communication
+5. Collaborative Assignments and Projects — learning to solve problems with others; sharpening understanding through diverse perspectives
+6. Undergraduate Research — engaging students with contested questions, empirical observation, cutting-edge methods; strong NSF/disciplinary support in STEM
+7. Diversity/Global Learning — exploring cultures, life experiences, worldviews different from one's own; often includes intercultural study abroad or community engagement
+8. ePortfolios — collecting work over time, reflecting on growth, sharing with faculty, advisors, employers; especially powerful when linked to other HIPs
+9. Service Learning / Community-Based Learning — applying course content in community settings with structured reflection; builds civic capacity
+10. Internships — direct experience in work settings with faculty-supervised projects
+11. Capstone Courses and Projects — culminating integrative experiences; research papers, portfolios, performances, exhibits
+
+HIPs work best when they are: (a) offered to all students, not just high-achievers; (b) embedded in required curricula, not only elective; (c) designed with explicit reflection components; (d) connected to other course elements rather than isolated. First-generation and underrepresented students benefit most — and are currently least likely to participate.
+
+RESTRUCTURING LARGE CLASSES FOR COMMUNITY (MacGregor, 2022):
+Large lecture classes can be restructured to create learning community dynamics:
+- Break courses into smaller, stable learning teams (5–7 students) that persist across weeks — accountability and belonging increase.
+- Design team-based assignments around real questions or problems in the discipline.
+- Use collaborative note-taking, peer instruction (think-pair-share, problem-solving), and team presentations.
+- Faculty role shifts from sole knowledge source to facilitator and expert guide.
+- Peer learning in well-structured groups produces gains comparable to smaller classes — the key is structure, not group size.
+
+#### AI IN TEACHING AND LEARNING
+Sources:
+- Ott, C., Salehi, S., & Lowe, D. (2024). Exploring the integration and utilisation of generative AI in formative e-assessments: A case study in higher education. Assessment & Evaluation in Higher Education.
+- Acuyo Cespedes, A. (2025). Pedagogical shifts in the age of generative AI: Faculty perspectives from a higher education context. Journal of Pedagogical Sociology and Psychology, 7(3). https://doi.org/10.33902/jpsp.202537244
+- Additional source: AI and student learning outcomes literature (2024–2025)
+
+NOTE: The AI in education field is evolving rapidly. These findings reflect research through mid-2025. Recommend faculty also consult current institutional guidance from BU IETL (excellence@bu.edu) and BU's Academic Technology office for the most current policy landscape.
+
+STUDENT AI USE IN ASSESSMENTS (Ott et al., 2024):
+Case study: 25 undergraduates using ChatGPT 4.0 during 4 formative e-assessments in a communication research methods course. Key findings:
+- 40–47% of students used ChatGPT for at least some assessment questions, depending on assessment.
+- Most common motivations: knowledge gaps (didn't know the answer), need for clarification/definitions, verification of existing answers, and convenience of quick responses.
+- Adoption rate after using ChatGPT was very high: 85–98% of students who used it accepted the AI-generated answer.
+- Error rate: a small but non-trivial percentage of adopted ChatGPT answers were incorrect (3–7% per assessment), rising to 6.7% in Assessment 4.
+- Students most commonly pasted the entire assessment question directly into ChatGPT (copy-paste prompting).
+- Traditional resources (notes, textbook) still preferred overall, but gap narrowed over the semester as reliance on ChatGPT increased.
+
+Assessment design implications: Question types that require synthesis, application, or original analysis are less susceptible to AI-assisted cheating than recall-based multiple choice and true/false. Explicit AI policy in the syllabus is necessary but not sufficient — students need AI literacy training and clear guidance on when and how AI use is appropriate.
+
+FACULTY PERSPECTIVES ON GENERATIVE AI (Acuyo Cespedes, 2025):
+Qualitative study: 41 faculty at an English-medium university. Key themes:
+
+Benefits perceived by faculty:
+- AI is a paradigm shift that is here to stay — proactive adaptation is preferable to resistance.
+- When used as a complement (not replacement), AI can boost faculty productivity in repetitive tasks: quiz design, lesson planning, generating first drafts of rubrics.
+- Students benefit from AI as a brainstorming scaffold — helps them overcome the "blank page" problem and unblock creative impasses in writing.
+- The human dimensions of teaching (empathy, adaptability, inspiration) are not replaceable by AI.
+
+Challenges perceived by faculty:
+- Institutional policy lag: most universities lack coherent AI guidance for assessment, academic integrity, and classroom use.
+- Assessment rubrics and grading criteria need revision to reflect AI-assisted learning contexts — e.g., rubrics that assess grammatical accuracy may be moot when AI can correct grammar instantly.
+- "Bypassing the learning struggle": when students use AI to skip productive struggle, skill development suffers — especially higher-order thinking, argumentation, and creativity.
+- AI output limitations: hallucinations, bias, "polished but wrong" outputs increase risk when students lack the domain knowledge to evaluate AI claims.
+- Policing burden: detecting AI-assisted plagiarism increases faculty workload disproportionately.
+
+Actionable recommendations for faculty designing in an AI context:
+1. Design assessments that require process artifacts (drafts, reflections, in-class components) that AI cannot easily replicate.
+2. Shift toward oral defenses, presentations, and in-person components for high-stakes assessment.
+3. Teach AI literacy explicitly — help students understand how to evaluate, prompt, and critically assess AI outputs.
+4. Write a clear, specific AI policy for your syllabus: define what uses are permitted, how to disclose AI use (APA Style for AI citation is now established), and what constitutes misuse.
+5. Use AI-resistant question types: open-ended reflection connected to class-specific discussions, problems requiring course-specific data, peer review with accountability.
+6. Collaborate with colleagues: course-level and program-level coordination on AI policy prevents students from navigating inconsistent expectations.
+
+## Knowledge Base Status
+ACTIVE: Learning science foundations (Ambrose et al., 2010); assessment and learning outcomes (Goss, 2022; Ritchie et al., 2020); course and syllabus design (UC San Diego, n.d.; Harrington & Thomas, 2018); inclusive pedagogy/UDL (Winkelmes et al., 2016; CAST, 2024; Hogan & Sathy, 2022); instructional video (Noetel et al., 2021); gamification (Lister, 2015); guided notes (Biggers & Luo, 2020); experiential learning/HIPs (Kolb & Kolb, 2017; AAC&U, n.d.; MacGregor, 2022); AI in teaching and learning (Ott et al., 2024; Acuyo Cespedes, 2025).
+All major knowledge areas are now active. When a query falls outside these areas, draw on general learning science knowledge, acknowledge the limitation explicitly, and direct faculty to excellence@bu.edu.
+
+## Behavioral Rules
+- ALWAYS provide citations — no anecdotal recommendations without evidence
+- NEVER fabricate references — if no specific research is available, say so explicitly
+- Constrain answers to knowledge base — flag limitations honestly when a topic exceeds it
+- REFUSE clinical, medical, or legal advice — redirect to appropriate professionals
+- Tailor all responses to faculty context when profile information is available
+- Avoid verbosity — faculty need succinct, actionable recommendations
+- Prioritize low effort + high impact strategies first
+- At the close of EVERY consultation, include the closing statement below
+
+## Closing Statement (include at natural end of every consultation)
+---
+*For additional support, contact the Institute for Excellence in Teaching & Learning at [excellence@bu.edu](mailto:excellence@bu.edu).*${pc}`;
+}
+
+// ── SUMMARY GENERATION PROMPT ──────────────────────────────
+function buildSumReq() {
+  const pp = [profile.career, profile.role, profile.discipline, profile.context].filter(Boolean);
+  return `Based on the consultation above, generate a comprehensive Consultation Summary as plain text (no markdown formatting). Use clear section headers. Be thorough but concise.
+
+FACULTY CONSULTATION SUMMARY
+NEB TLC — New Evidence-Based Teaching & Learning Coach
+Institute for Excellence in Teaching & Learning, Boston University
+excellence@bu.edu | bu.edu/ctl
+${'-'.repeat(60)}
+DATE: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+FACULTY PROFILE: ${pp.length ? pp.join(' | ') : 'Not provided'}
+${'-'.repeat(60)}
+
+SECTION 1: TEACHING CHALLENGE
+[Summarize the core challenge or question the faculty member brought to this consultation]
+
+SECTION 2: LEARNING OBJECTIVES IDENTIFIED
+[What the faculty member hoped to achieve or improve]
+
+SECTION 3: TEACHING CONTEXT
+[Course context, class size, modality, constraints, as discussed]
+
+SECTION 4: STRATEGIES RECOMMENDED
+[For each strategy, include all 9 points:
+- Strategy Name and Overview
+- Best Fit Group Size
+- Faculty Time Requirements
+- Complexity Level
+- Educational Benefits
+- Models & Templates (with URLs where possible)
+- Technology Support
+- Research Citations (APA 7th edition)
+- Equity & Inclusion Notes / UDL Considerations]
+
+SECTION 5: NEXT STEPS
+[What the faculty member said they would try first, or NEB TLC's recommended starting point]
+
+SECTION 6: ALL CITATIONS
+[Every reference cited during the consultation, APA 7th edition]
+
+${'-'.repeat(60)}
+For additional support, contact the Institute for Excellence in Teaching & Learning at excellence@bu.edu`;
+}
+
+// ── PILOT MODAL ────────────────────────────────────────────
+function closePilot() {
+  document.getElementById('pilotOv').classList.add('hidden');
+  const saved = localStorage.getItem(SK);
+  if (saved) loadProfile(JSON.parse(saved));
+}
+
+// ── PROFILE ────────────────────────────────────────────────
+function openProfile() {
+  document.getElementById('pCareer').value     = profile.career     || '';
+  document.getElementById('pRole').value       = profile.role       || '';
+  document.getElementById('pDiscipline').value = profile.discipline || '';
+  document.getElementById('pContext').value    = profile.context    || '';
+  document.getElementById('profileOv').classList.remove('hidden');
+}
+function closeProfile() { document.getElementById('profileOv').classList.add('hidden'); }
+function saveProfile() {
+  const p = {
+    career:     document.getElementById('pCareer').value,
+    role:       document.getElementById('pRole').value,
+    discipline: document.getElementById('pDiscipline').value,
+    context:    document.getElementById('pContext').value
+  };
+  localStorage.setItem(SK, JSON.stringify(p));
+  loadProfile(p);
+  closeProfile();
+}
+function loadProfile(p) {
+  profile = p;
+  const hasData = Object.values(p).some(Boolean);
+  if (hasData) {
+    document.getElementById('pChipTxt').textContent = 'Profile active';
+    document.getElementById('pChip').style.display = 'inline-flex';
+  }
+}
+// restore on load
+(function(){ const s = localStorage.getItem(SK); if(s) loadProfile(JSON.parse(s)); })();
+
+// ── SUMMARY ────────────────────────────────────────────────
+async function openSum() {
+  if (!history.length) { alert('Start a consultation first — your summary will be available after NEB TLC provides recommendations.'); return; }
+  document.getElementById('sumOv').classList.remove('hidden');
+  const msg = document.getElementById('sumMsg');
+  const content = document.getElementById('sumContent');
+  const dl = document.getElementById('dlBtn');
+  msg.style.display = 'block';
+  content.textContent = '';
+  dl.disabled = true;
+  sumTxt = '';
+  try {
+    const sumController = new AbortController();
+    const sumTimeout = setTimeout(() => sumController.abort(), 90000);
+    const r = await fetch(RELAY, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 2500,
+        system: buildSys(),
+        messages: [...history, {role:'user', content: buildSumReq()}]
+      }),
+      signal: sumController.signal
+    });
+    clearTimeout(sumTimeout);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    sumTxt = d.content?.[0]?.text || 'Summary generation failed — please try again.';
+    content.textContent = sumTxt;
+    dl.disabled = false;
+  } catch(e) {
+    console.error('NEB TLC summary error:', e);
+    content.textContent = 'Summary could not be generated (' + (e.message || 'network error') + '). Please try again or contact excellence@bu.edu.';
+  } finally {
+    msg.style.display = 'none';
+  }
+}
+function closeSum() { document.getElementById('sumOv').classList.add('hidden'); }
+function dlSum() {
+  if (!sumTxt) return;
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([sumTxt], {type:'text/plain'})),
+    download: 'NEB-TLC-Summary-' + new Date().toISOString().slice(0,10) + '.txt'
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function printSum() {
+  const txt = document.getElementById('sumContent').textContent;
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>NEB TLC Consultation Summary</title>
+  <style>body{font-family:Georgia,serif;font-size:11.5pt;max-width:700px;margin:40px auto;color:#1a2332;line-height:1.75}pre{white-space:pre-wrap;font-family:Georgia,serif}</style>
+  </head><body><pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></body></html>`);
+  w.document.close(); w.print();
+}
+
+// ── CHAT ───────────────────────────────────────────────────
+function clearWelcome() { document.getElementById('welcome')?.remove(); }
+function scroll() { const s=document.getElementById('chatScroll'); s.scrollTop=s.scrollHeight; }
+
+function addMsg(role, html) {
+  clearWelcome();
+  const d = document.createElement('div');
+  d.className = 'msg' + (role==='user'?' user':'');
+  d.innerHTML = `<div class="av ${role==='user'?'av-u':'av-ai'}">${role==='user'?'You':'NEB'}</div>
+    <div class="bub ${role==='user'?'bub-u':'bub-ai'}">${html}</div>`;
+  document.getElementById('chatInner').appendChild(d);
+  scroll();
+}
+
+function showTyping() {
+  clearWelcome();
+  const d = document.createElement('div');
+  d.id='typing'; d.className='typing-row';
+  d.innerHTML = `<div class="av av-ai">NEB</div><div class="typing-bub"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+  document.getElementById('chatInner').appendChild(d); scroll();
+}
+function hideTyping() { document.getElementById('typing')?.remove(); }
+
+// ── MARKDOWN ───────────────────────────────────────────────
+function md(text) {
+  return text.split(/\n{2,}/).map(b => {
+    const lines = b.trim().split('\n');
+    if (!lines.length || !b.trim()) return '';
+    if (/^###\s/.test(lines[0])) {
+      const rest = lines.slice(1).join(' ').trim();
+      return '<h3>'+inl(lines[0].replace(/^###\s/,''))+'</h3>'+(rest?'<p>'+inl(rest)+'</p>':'');
+    }
+    if (/^---+$/.test(lines[0].trim())) return '<hr>';
+    if (lines.some(l => /^[-*]\s/.test(l.trim()))) {
+      const items = lines.filter(l => /^[-*]\s/.test(l.trim()));
+      return '<ul>'+items.map(l=>'<li>'+inl(l.replace(/^[-*]\s/,''))+'</li>').join('')+'</ul>';
+    }
+    if (lines.some(l => /^\d+\.\s/.test(l.trim()))) {
+      const items = lines.filter(l => /^\d+\.\s/.test(l.trim()));
+      return '<ol>'+items.map(l=>'<li>'+inl(l.replace(/^\d+\.\s/,''))+'</li>').join('')+'</ol>';
+    }
+    const t = lines.join(' ').trim();
+    return t ? '<p>'+inl(t)+'</p>' : '';
+  }).filter(Boolean).join('');
+}
+function inl(t) {
+  return t
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/\[(.+?)\]\((.+?)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+}
+
+// ── SEND ───────────────────────────────────────────────────
+async function send() {
+  const ta = document.getElementById('chatTa');
+  const text = ta.value.trim();
+  if (!text || busy) return;
+  ta.value=''; resize(ta);
+  document.getElementById('sendBtn').disabled = true;
+  history.push({role:'user', content:text});
+  addMsg('user', md(text));
+  busy=true; showTyping();
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 60000);
+
+  try {
+    const r = await fetch(RELAY, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:MODEL, max_tokens:2000, system:buildSys(), messages:history}),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (!r.ok) {
+      let errDetail = '';
+      try { const eb = await r.json(); errDetail = eb.error?.message || JSON.stringify(eb); } catch(_){}
+      console.error('NEB TLC relay error', r.status, errDetail);
+      throw new Error('HTTP ' + r.status + (errDetail ? ': ' + errDetail : ''));
+    }
+    const d = await r.json();
+    const reply = d.content?.[0]?.text || 'Something went wrong — please try again.';
+    history.push({role:'assistant', content:reply});
+    hideTyping(); addMsg('ai', md(reply));
+    if (!hasRec) { hasRec=true; document.getElementById('sumBar').classList.add('on'); }
+  } catch(e) {
+    clearTimeout(timeout);
+    history.pop(); hideTyping();
+    const isTimeout = e.name === 'AbortError';
+    const errMsg = isTimeout
+      ? 'The request timed out. The service may be temporarily unavailable.'
+      : 'I had trouble connecting (' + (e.message || 'network error') + ').';
+    console.error('NEB TLC send error:', e);
+    addMsg('ai','<p>' + errMsg + ' Please try again. If this continues, contact <a href="mailto:excellence@bu.edu">excellence@bu.edu</a>.</p>');
+  } finally {
+    busy=false;
+    document.getElementById('sendBtn').disabled = false;
+    ta.focus();
+  }
+}
+
+function useStarter(q) {
+  document.getElementById('chatTa').value = q;
+  resize(document.getElementById('chatTa'));
+  send();
+}
+
+function newConsult() {
+  if (history.length && !confirm('Start a new consultation? The current conversation will be cleared.')) return;
+  history=[]; hasRec=false; sumTxt='';
+  document.getElementById('sumBar').classList.remove('on');
+  document.getElementById('chatInner').innerHTML = `
+    <div class="welcome" id="welcome">
+      <div class="wtxt"><h2>Welcome to your New Evidence-Based Teaching and Learning Coach.</h2><p>The NEB TLC is a teaching triage tool for 24/7 faculty guidance on acute pedagogical challenges. The recommendations are evidence-based instructional strategies for post-secondary courses reflecting culturally responsive, inclusive pedagogy and UDL best practices to accommodate learner variability.</p></div>
+      <div class="starters">
+        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm struggling with student engagement in my lectures. Students seem passive and I'm not sure how to get them more actively involved. Can you help?">Students are passive in my lectures — how do I increase active engagement?</button>
+        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I want to improve the quality of feedback I give students on their work, but I'm limited on time. What does the evidence say about effective feedback practices?">How can I give more effective feedback without spending more time?</button>
+        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I teach a large lecture course and I'm concerned some students are being left behind. How can I make my teaching more inclusive for all students?">How do I make my large lecture course more inclusive?</button>
+        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm redesigning a course and want to make sure my assessments actually measure what I'm teaching. Where should I start with assessment alignment?">How do I align my assessments with what I'm actually teaching?</button>
+      </div>
+    </div>`;
+}
+
+function onKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
+function onInput() { const ta=document.getElementById('chatTa'); resize(ta); document.getElementById('sendBtn').disabled=!ta.value.trim(); }
+function resize(ta) { ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,160)+'px'; }
+</script>
+</body>
+</html>
