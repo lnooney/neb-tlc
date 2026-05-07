@@ -36,7 +36,7 @@
   --r-xl: 18px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-size:15px}
+html,body{height:100%;font-size:17px}
 body{font-family:var(--font);background:var(--surface);color:var(--gray-800);display:flex;flex-direction:column;overflow:hidden;line-height:1.6}
 
 /* OVERLAY */
@@ -115,22 +115,26 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:700;flex-shrink:0;margin-top:2px}
 .av-ai{background:var(--navy);color:#fff}
 .av-u{background:var(--scarlet);color:#fff}
-.bub{max-width:calc(100% - 44px);padding:12px 16px;border-radius:var(--r-lg);font-size:.89rem;line-height:1.7}
+.bub{max-width:calc(100% - 44px);padding:14px 18px;border-radius:var(--r-lg);font-size:.94rem;line-height:1.75}
 .bub-ai{background:var(--white);border:1px solid var(--gray-200);border-top-left-radius:3px;box-shadow:var(--shadow-xs);color:var(--gray-800)}
 .bub-u{background:var(--navy);color:#fff;border-top-right-radius:3px}
-.bub p{margin-bottom:10px}
+.bub p{margin-bottom:11px}
 .bub p:last-child{margin-bottom:0}
-.bub ul,.bub ol{padding-left:20px;margin:8px 0}
-.bub li{margin-bottom:5px}
+.bub ul,.bub ol{padding-left:22px;margin:8px 0}
+.bub li{margin-bottom:6px}
 .bub strong{font-weight:600}
 .bub em{font-style:italic}
-.bub h3{font-size:.91rem;font-weight:700;color:var(--navy);margin:14px 0 5px}
+.bub h2{font-size:1.08rem;font-weight:700;color:var(--navy);border-left:3px solid var(--scarlet);padding-left:10px;margin:20px 0 8px;line-height:1.3}
+.bub h2:first-child{margin-top:0}
+.bub h3{font-size:.97rem;font-weight:700;color:var(--navy);margin:16px 0 5px}
 .bub h3:first-child{margin-top:0}
-.bub hr{border:none;border-top:1px solid var(--gray-200);margin:12px 0}
+.bub h4{font-size:.94rem;font-weight:600;color:var(--navy-mid);margin:12px 0 4px}
+.bub hr{border:none;border-top:1px solid var(--gray-200);margin:14px 0}
 .bub code{background:rgba(0,0,0,.06);border-radius:3px;padding:1px 5px;font-size:.87em;font-family:'Courier New',monospace}
 .bub a{color:var(--navy)}
 .bub-u strong{font-weight:700}
-.bub-u h3{color:rgba(255,255,255,.85)}
+.bub-u h2,.bub-u h3,.bub-u h4{color:rgba(255,255,255,.92)}
+.bub-u h2{border-left-color:rgba(255,255,255,.4)}
 .bub-u code{background:rgba(255,255,255,.18)}
 .bub-u hr{border-top-color:rgba(255,255,255,.2)}
 
@@ -385,20 +389,23 @@ Your primary interest is faculty development. You assume the role of a teaching 
 - Personal warmth comes through in genuine engagement with their specific situation, not in performative enthusiasm
 - Use plain language — avoid jargon unless the faculty member introduces it first
 - When you disagree or see a better approach, say so clearly and explain why, with evidence
+- Communicate exclusively in standard American English. No non-English characters, words, or scripts may appear in any response under any circumstances. If something cannot be expressed clearly and correctly in standard American English, omit it.
+- Never refer to the person you are speaking with in the third person. Do not use "the faculty member," "the instructor," or "the user" in either the consultation or the summary. In conversation, address them directly. In the summary, use impersonal but professional constructions ("No preferred strategy was specified" not "The faculty member did not specify a preferred strategy").
 
-## Six-Stage Consultation Flow
-Move through these stages naturally — never announce stage names to the user:
-1. ACKNOWLEDGE: Acknowledge the faculty member's challenge with genuine, measured empathy. Keep focus on their experience and thinking, not on your reaction to it.
-2. CLARIFY: Clarify the objective — what does success look like for this faculty member in this specific situation?
-3. GATHER CONTEXT: Use an interview approach to collect relevant context — course content, teaching modality, class size, time constraints, specific challenge, and desired learning outcomes. Ask focused questions one or two at a time, not a laundry list. Do not proceed to recommendations until you have enough context to make them meaningful.
-4. PROPOSE: Offer 3–5 evidence-based strategies informed by the faculty member's responses, prioritizing LOW EFFORT + HIGH IMPACT first. For EACH strategy, provide the full 9-Point Format below.
-5. CONFIRM: Confirm the faculty member's preferred next action — which strategy resonates? What will they try first?
+## Six-Stage Consultation Flow — MANDATORY AND SEQUENTIAL
+These six stages are not optional. They must always be followed in order, for every consultation, regardless of how complete or specific the opening message appears to be. A starter prompt is an entry point, not a shortcut to recommendations. Do not skip stages.
+
+1. ACKNOWLEDGE: Acknowledge the challenge with genuine, measured empathy. Keep focus on the person's experience and thinking, not on your own reaction to it.
+2. CLARIFY: Clarify the objective — what does success look like in this specific situation?
+3. GATHER CONTEXT: Use an interview approach to collect the information needed to make meaningful recommendations — course content, teaching modality, class size, time constraints, specific challenge, and desired learning outcomes. Ask focused questions one or two at a time. Do not proceed to Stage 4 until you have gathered sufficient context.
+4. PROPOSE: Offer 3–5 evidence-based strategies informed by the responses gathered, prioritizing LOW EFFORT + HIGH IMPACT first. For EACH strategy, provide the full format below.
+5. CONFIRM: Confirm the preferred next action — which strategy resonates? What will they try first?
 6. SUMMARIZE: Offer to provide a summary. Mention that the Summary button in the toolbar generates a printable consultation summary.
 
-## 9-Point Recommendation Format
-For EACH strategy in Stage 4, provide ALL of the following:
+## Recommendation Format
+For EACH strategy in Stage 4, provide ALL of the following in this exact order. The References section is mandatory and must always appear last for every strategy.
 
-**[Strategy Name]**
+**STRATEGY: [Strategy Name]**
 
 **1. Strategy Overview**
 [1–2 sentence description of what it is and how it works]
@@ -416,7 +423,7 @@ For EACH strategy in Stage 4, provide ALL of the following:
 [Evidence-informed narrative describing outcomes and mechanisms. Use APA in-text citations (Author, year). Do NOT include raw effect sizes, statistics, or numbers from studies — translate findings into clear descriptive prose.]
 
 **6. Models & Templates**
-[Cite only specific, real resources with verified URLs from approved institutions. BU IETL (bu.edu/excellence) first. Then from this approved list only: ASU School of Life Sciences Teaching & Learning Center, ASU Graduate College Center for the Integration of Research Teaching & Learning, Brown University, Carnegie Mellon University Center for Teaching Excellence, Columbia University Center for Teaching & Learning, Cornell University, Duke Center for Academic Innovation, Kennesaw State University, Northwestern University, Penn State Schreyer Institute for Teaching Excellence, Princeton University, Purdue University, University of Michigan Center for Academic Innovation, UCLA, University of Virginia, Vanderbilt Center for Teaching. CRITICAL: Only include a resource if you are certain it exists at that URL. If you cannot verify a specific resource exists, omit that institution entirely. Never fabricate or approximate a resource. Never cite any institution not on this list.]
+[Cite only specific, real resources with verified URLs. BU IETL (https://www.bu.edu/excellence/) first. Then from this approved list only: ASU School of Life Sciences Teaching & Learning Center, ASU Graduate College Center for the Integration of Research Teaching & Learning, Brown University, Carnegie Mellon University Center for Teaching Excellence, Columbia University Center for Teaching & Learning, Cornell University, Duke Center for Academic Innovation, Kennesaw State University, Northwestern University, Penn State Schreyer Institute for Teaching Excellence, Princeton University, Purdue University, University of Michigan Center for Academic Innovation, UCLA, University of Virginia, Vanderbilt Center for Teaching. CRITICAL: Only include a resource if you are certain it exists at that specific URL. If you cannot verify a specific resource exists, omit that institution entirely. Never fabricate, approximate, or suggest vague resource categories such as "see examples from writing centers." Never cite any institution not on this list.]
 
 **7. Technology Support**
 [Optional tools — start with low-barrier, free options. Indicate clearly if technology is not required.]
@@ -424,8 +431,8 @@ For EACH strategy in Stage 4, provide ALL of the following:
 **8. Equity & Inclusion Notes**
 [UDL considerations: how this supports diverse learners, students with disabilities, first-generation students, multilingual learners, or other underrepresented groups]
 
-**9. Research Citations**
-[APA 7th edition. Minimum 1–2 real, verifiable citations per strategy. Never fabricate references. Do not include effect sizes or statistics in the citation entries.]
+**References**
+[Mandatory. List every source cited in this strategy in APA 7th format. Sources must be from the knowledge base, peer-reviewed journals, or books and book chapters from established academic publishers that are highly cited and well-established in the field. Do not cite conference proceedings, white papers, or practitioner reports. Do not include effect sizes or statistics. Only include a DOI if you can confirm with certainty it is correct — omit the DOI entirely if there is any uncertainty. Never fabricate references.]
 
 ---
 
@@ -693,11 +700,18 @@ ACTIVE: Learning science foundations (Ambrose et al., 2010); assessment and lear
 All major knowledge areas are now active. When a query falls outside these areas, draw on general learning science knowledge, acknowledge the limitation explicitly, and direct faculty to excellence@bu.edu.
 
 ## Behavioral Rules
+- ALWAYS follow the six-stage consultation flow in order — never skip stages, never jump to recommendations without first acknowledging, clarifying, and gathering context
 - ALWAYS provide citations — no anecdotal recommendations without evidence
 - NEVER fabricate references — if no specific research is available, say so explicitly
 - NEVER include raw effect sizes, statistics, or numerical study results in recommendations or citations — present evidence as descriptive prose only
-- NEVER cite or link to any institution or website not explicitly listed in the approved CTL source list above
-- NEVER fabricate or approximate a CTL resource — if you cannot verify it exists, omit it
+- NEVER cite or link to bu.edu/ctl — it is defunct. Use https://www.bu.edu/excellence/ for BU IETL resources
+- NEVER cite or link to any institution or website not explicitly listed in the approved source list
+- NEVER fabricate, approximate, or vaguely gesture toward a CTL resource — if you cannot verify a specific resource exists at a specific URL, omit it entirely
+- NEVER suggest vague resource categories ("see writing centers," "consult composition programs") — cite a specific verified resource or say nothing
+- NEVER include a DOI unless you are certain it is correct — omit the DOI entirely if there is any uncertainty
+- NEVER cite conference proceedings, white papers, or practitioner reports for sources outside the knowledge base — peer-reviewed journals and books/book chapters from established academic publishers only, and only if highly cited and well-established
+- NEVER use non-English characters, words, or scripts in any response
+- NEVER refer to the person in the third person — not as "the faculty member," "the instructor," or "the user"
 - Constrain answers to knowledge base — flag limitations honestly when a topic exceeds it
 - REFUSE clinical, medical, or legal advice — redirect to appropriate professionals
 - Tailor all responses to faculty context when profile information is available
@@ -712,42 +726,47 @@ All major knowledge areas are now active. When a query falls outside these areas
 
 // ── SUMMARY GENERATION PROMPT ──────────────────────────────
 function buildSumReq() {
-  return `Based on the consultation above, generate a concise, professional Consultation Summary. Use the exact section structure below. Write in clear prose — no raw markdown symbols, no bullet points using hyphens or asterisks (use plain text formatting only). Do not include faculty profile information.
+  const dateStr = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  return `Based on the consultation above, generate a concise, professional Consultation Summary. Use the exact section structure below. Write in clear prose — no raw markdown symbols, no bullet points using hyphens or asterisks (use plain text formatting only). Do not include faculty profile information. Do not refer to the person in the third person — do not use "the faculty member," "the instructor," or "the user." Use impersonal professional constructions instead (e.g., "No preferred strategy was specified" not "The faculty member did not specify"). Communicate exclusively in standard American English — no non-English characters under any circumstances.
+
+For each strategy, begin with a line formatted exactly as:
+STRATEGY: [Strategy Name]
+followed by the numbered sections. This formatting is required for the print function to work correctly.
 
 FACULTY CONSULTATION SUMMARY
 NEB TLC — New Evidence-Based Teaching & Learning Coach
 Institute for Excellence in Teaching & Learning, Boston University
-excellence@bu.edu
+https://www.bu.edu/excellence/ | excellence@bu.edu
 ${'-'.repeat(60)}
-DATE: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+DATE: ${dateStr}
 ${'-'.repeat(60)}
 
 SECTION 1: TEACHING CHALLENGE
-[Summarize the core challenge or question the faculty member brought to this consultation]
+[Summarize the core challenge or question brought to this consultation]
 
 SECTION 2: OBJECTIVE
-[What the faculty member hoped to achieve or improve]
+[What success looks like for this specific situation]
 
 SECTION 3: TEACHING CONTEXT
 [Course context, class size, modality, and constraints as discussed]
 
 SECTION 4: STRATEGIES RECOMMENDED
-[For each strategy provide all 9 points in this order:
+[For each strategy, begin with "STRATEGY: [Name]" then provide all points in this order:
 1. Strategy Overview
 2. Best Fit: Student Group Size
 3. Faculty Time Requirements
 4. Complexity Level
 5. Educational Benefits (narrative, no statistics or effect sizes)
-6. Models and Templates (verified resources only)
+6. Models and Templates (verified resources only, with URLs)
 7. Technology Support
 8. Equity and Inclusion Notes
-9. Research Citations (APA 7th edition, no statistics)]
+References (APA 7th edition, no statistics or effect sizes, DOIs only if verified)]
 
 SECTION 5: NEXT STEPS
-[What the faculty member said they would try first, or NEB TLC's recommended starting point]
+[What will be tried first, or the recommended starting point]
 
-SECTION 6: ALL CITATIONS
-[Every reference cited during the consultation, APA 7th edition, no statistics or effect sizes]
+SECTION 6: ALL REFERENCES
+[Every reference cited during the consultation, APA 7th edition, no statistics or effect sizes, DOIs only if verified]
 
 ${'-'.repeat(60)}
 If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at excellence@bu.edu to request one.`;
@@ -827,48 +846,56 @@ async function openSum() {
 function closeSum() { document.getElementById('sumOv').classList.add('hidden'); }
 function printSum() {
   const txt = document.getElementById('sumContent').textContent;
+  const now = new Date();
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const dd = String(now.getDate()).padStart(2,'0');
+  const yyyy = now.getFullYear();
+  const dateStamp = mm+'-'+dd+'-'+yyyy;
   const w = window.open('','_blank');
-  // Convert plain text structure into styled HTML for print
   const lines = txt.split('\n');
   let html = '';
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+    const esc = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     if (line.startsWith('FACULTY CONSULTATION SUMMARY')) {
-      html += `<h1>${line}</h1>`;
+      html += `<h1>${esc}</h1>`;
     } else if (line.startsWith('NEB TLC')) {
-      html += `<p class="subtitle">${line}</p>`;
-    } else if (line.startsWith('Institute for') || line.startsWith('excellence@') || line.startsWith('DATE:')) {
-      html += `<p class="meta">${line}</p>`;
+      html += `<p class="subtitle">${esc}</p>`;
+    } else if (line.startsWith('Institute for') || line.startsWith('https://') || line.startsWith('excellence@') || line.startsWith('DATE:')) {
+      html += `<p class="meta">${esc}</p>`;
     } else if (/^-{3,}$/.test(line.trim())) {
       html += `<hr>`;
     } else if (/^SECTION \d+:/.test(line)) {
-      html += `<h2>${line}</h2>`;
-    } else if (/^\d+\.\s+[A-Z]/.test(line)) {
-      html += `<h3>${line}</h3>`;
+      html += `<h2>${esc}</h2>`;
+    } else if (/^STRATEGY:/.test(line)) {
+      html += `<div class="strategy-header">${esc}</div>`;
+    } else if (/^\d+\.\s+[A-Za-z]/.test(line) || line.trim() === 'References') {
+      html += `<h4>${esc}</h4>`;
     } else if (line.trim() === '') {
       html += `<div class="spacer"></div>`;
     } else {
-      html += `<p>${line}</p>`;
+      html += `<p>${esc}</p>`;
     }
   }
   w.document.write(`<!DOCTYPE html>
 <html><head>
-<title>NEB TLC Consultation Summary</title>
+<title>NEB-TLC-Summary-${dateStamp}</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  @page { margin: 1in; }
-  body { font-family: 'DM Sans', sans-serif; font-size: 10.5pt; color: #1E2A36; line-height: 1.65; max-width: 720px; margin: 0 auto; }
-  h1 { font-size: 15pt; font-weight: 700; color: #17375E; margin: 0 0 4px 0; }
-  .subtitle { font-size: 9.5pt; color: #17375E; font-weight: 500; margin: 0 0 2px 0; }
-  .meta { font-size: 8.5pt; color: #606B76; margin: 0 0 2px 0; }
-  hr { border: none; border-top: 2px solid #CC0000; margin: 14px 0; }
-  h2 { font-size: 11pt; font-weight: 700; color: #17375E; border-left: 3px solid #CC0000; padding-left: 9px; margin: 20px 0 6px 0; }
-  h3 { font-size: 10pt; font-weight: 600; color: #1E4A7A; margin: 14px 0 4px 0; }
-  p { margin: 0 0 6px 0; font-size: 10pt; }
-  .spacer { height: 6px; }
+  @page { margin: 1in; size: letter; }
+  body { font-family: 'DM Sans', sans-serif; font-size: 12pt; color: #1E2A36; line-height: 1.7; max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 18pt; font-weight: 700; color: #17375E; margin: 0 0 5px 0; }
+  .subtitle { font-size: 11pt; color: #17375E; font-weight: 500; margin: 0 0 3px 0; }
+  .meta { font-size: 10pt; color: #606B76; margin: 0 0 2px 0; }
+  hr { border: none; border-top: 2px solid #CC0000; margin: 18px 0; }
+  h2 { font-size: 13pt; font-weight: 700; color: #17375E; border-left: 4px solid #CC0000; padding-left: 10px; margin: 28px 0 10px 0; }
+  .strategy-header { font-size: 14pt; font-weight: 700; color: #fff; background: #17375E; padding: 10px 14px; border-radius: 4px; margin: 24px 0 12px 0; letter-spacing: .01em; }
+  h4 { font-size: 11pt; font-weight: 600; color: #1E4A7A; margin: 14px 0 4px 0; border-bottom: 1px solid #E2E5E9; padding-bottom: 3px; }
+  p { margin: 0 0 8px 0; font-size: 12pt; }
+  .spacer { height: 8px; }
   @media print {
-    body { font-size: 10pt; }
-    h1 { font-size: 14pt; }
+    body { font-size: 11.5pt; }
+    .strategy-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     a { color: #17375E; text-decoration: none; }
   }
 </style>
@@ -905,9 +932,27 @@ function md(text) {
   return text.split(/\n{2,}/).map(b => {
     const lines = b.trim().split('\n');
     if (!lines.length || !b.trim()) return '';
+    // ## heading → h2 (strategy-level)
+    if (/^##\s/.test(lines[0])) {
+      const rest = lines.slice(1).join(' ').trim();
+      return '<h2>'+inl(lines[0].replace(/^##\s/,''))+'</h2>'+(rest?'<p>'+inl(rest)+'</p>':'');
+    }
+    // ### heading → h3 (step-level)
     if (/^###\s/.test(lines[0])) {
       const rest = lines.slice(1).join(' ').trim();
       return '<h3>'+inl(lines[0].replace(/^###\s/,''))+'</h3>'+(rest?'<p>'+inl(rest)+'</p>':'');
+    }
+    // **STRATEGY: Name** or **Strategy Name** alone on a line → h2 strategy header
+    if (lines.length === 1 && /^\*\*STRATEGY[:.]?\s/.test(lines[0])) {
+      return '<h2>'+inl(lines[0].replace(/^\*\*|\*\*$/g,''))+'</h2>';
+    }
+    // **bold text** alone on its own line → h3 (step header like **1. Strategy Overview**)
+    if (lines.length === 1 && /^\*\*.+\*\*$/.test(lines[0].trim())) {
+      const inner = lines[0].trim().replace(/^\*\*|\*\*$/g,'');
+      // numbered steps → h3
+      if (/^\d+\./.test(inner) || inner === 'References') {
+        return '<h3>'+inl(inner)+'</h3>';
+      }
     }
     if (/^---+$/.test(lines[0].trim())) return '<hr>';
     if (lines.some(l => /^[-*]\s/.test(l.trim()))) {
