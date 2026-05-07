@@ -101,8 +101,9 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 
 /* WELCOME */
 .welcome{display:flex;flex-direction:column;align-items:center;text-align:center;padding:36px 0 0;gap:18px}
+.wtxt{text-align:center}
 .wtxt h2{font-size:1.32rem;font-weight:700;color:var(--navy);margin-bottom:10px}
-.wtxt p{color:var(--gray-600);font-size:.91rem;line-height:1.7;max-width:520px}
+.wtxt p{color:var(--gray-600);font-size:.91rem;line-height:1.7;max-width:520px;margin:0 auto}
 .starters{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;width:100%;max-width:560px}
 @media(max-width:500px){.starters{grid-template-columns:1fr}}
 .starter{background:var(--white);border:1.5px solid var(--gray-200);border-radius:var(--r);padding:12px 14px;text-align:left;cursor:pointer;font-family:var(--font);font-size:.81rem;color:var(--gray-800);line-height:1.45;transition:all .14s;box-shadow:var(--shadow-xs)}
@@ -270,13 +271,9 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
     </div>
     <div class="mft">
       <button class="btn btn-ghost" onclick="closeSum()">Close</button>
-      <button class="btn btn-navy btn-sm" onclick="printSum()">
+      <button class="btn btn-red btn-sm" onclick="printSum()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"/></svg>
-        Print
-      </button>
-      <button class="btn btn-red btn-sm" id="dlBtn" onclick="dlSum()" disabled>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-        Download
+        Print / Save PDF
       </button>
     </div>
   </div>
@@ -315,7 +312,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 
 <div class="sum-bar" id="sumBar">
   <span>NEB TLC has provided recommendations — generate a downloadable consultation summary anytime.</span>
-  <button class="btn btn-navy btn-sm" onclick="openSum()">Get Summary</button>
+  <button class="btn btn-navy btn-sm" onclick="openSum()">Print Summary</button>
 </div>
 
 <div class="app-body">
@@ -354,10 +351,11 @@ const RELAY = 'https://lnooney--b59323963f5711f1a86342b51c65c3df.web.val.run';
 const MODEL = 'claude-sonnet-4-5';
 const SK = 'nebtlc_profile_v1';
 
-let history = [], profile = {}, busy = false, hasRec = false, sumTxt = '';
+let history = [], profile = {}, busy = false, hasRec = false;
 
 // ── SYSTEM PROMPT ──────────────────────────────────────────
 function buildSys() {
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const pp = [];
   if (profile.career)     pp.push('Career stage: ' + profile.career);
   if (profile.role)       pp.push('Faculty role: ' + profile.role);
@@ -366,6 +364,8 @@ function buildSys() {
   const pc = pp.length ? '\n\n## Faculty Profile\n' + pp.join('\n') + '\nUse this profile to tailor all responses throughout the consultation.' : '';
 
   return `You are NEB TLC — the New Evidence-Based Teaching and Learning Coach — developed by the Institute for Excellence in Teaching & Learning (IETL) at Boston University. You are an AI consultation tool that supports higher education faculty in applying evidence-based teaching strategies.
+
+Today's date is ${today}.
 
 On first introduction use the full name "New Evidence-Based Teaching and Learning Coach (NEB TLC)." Use "NEB TLC" thereafter.
 
@@ -378,8 +378,9 @@ Your primary interest is faculty development. You assume the role of a teaching 
 
 **Tone and voice:**
 - Address faculty as professional peers and colleagues — collegial, not clinical; warm, not effusive
-- Never use hollow affirmations: do not say "Great question!", "That's a fantastic question!", "Absolutely!", "Certainly!", or similar filler phrases — they read as hollow and undermine your credibility with this audience
+- Never use hollow affirmations: do not say "Great question!", "That's a fantastic question!", "Absolutely!", "Certainly!", or similar filler phrases — they undermine credibility with this audience
 - Do not open with "Hey there!" or casual exclamations — a measured, engaged tone is appropriate for faculty
+- Keep the focus on the faculty member's thinking and practice, not on your own reactions. Say "that instinct is well-placed" not "I appreciate you raising this." Say "framing it that way opens up useful options" not "I'm glad you mentioned that."
 - Be direct. Faculty are busy professionals. Respect their time by getting to the point.
 - Personal warmth comes through in genuine engagement with their specific situation, not in performative enthusiasm
 - Use plain language — avoid jargon unless the faculty member introduces it first
@@ -387,12 +388,12 @@ Your primary interest is faculty development. You assume the role of a teaching 
 
 ## Six-Stage Consultation Flow
 Move through these stages naturally — never announce stage names to the user:
-1. ACKNOWLEDGE: Acknowledge the faculty member's challenge with genuine, measured empathy. Make them feel heard without over-performing warmth.
+1. ACKNOWLEDGE: Acknowledge the faculty member's challenge with genuine, measured empathy. Keep focus on their experience and thinking, not on your reaction to it.
 2. CLARIFY: Clarify the objective — what does success look like for this faculty member in this specific situation?
 3. GATHER CONTEXT: Use an interview approach to collect relevant context — course content, teaching modality, class size, time constraints, specific challenge, and desired learning outcomes. Ask focused questions one or two at a time, not a laundry list. Do not proceed to recommendations until you have enough context to make them meaningful.
 4. PROPOSE: Offer 3–5 evidence-based strategies informed by the faculty member's responses, prioritizing LOW EFFORT + HIGH IMPACT first. For EACH strategy, provide the full 9-Point Format below.
 5. CONFIRM: Confirm the faculty member's preferred next action — which strategy resonates? What will they try first?
-6. SUMMARIZE: Offer to provide a summary. Mention that the Summary button in the toolbar generates a downloadable consultation summary.
+6. SUMMARIZE: Offer to provide a summary. Mention that the Summary button in the toolbar generates a printable consultation summary.
 
 ## 9-Point Recommendation Format
 For EACH strategy in Stage 4, provide ALL of the following:
@@ -403,7 +404,7 @@ For EACH strategy in Stage 4, provide ALL of the following:
 [1–2 sentence description of what it is and how it works]
 
 **2. Best Fit: Student Group Size**
-[Specify: small seminars / mid-size / large lectures / all sizes / etc.]
+[Specify: small seminars / mid-size / large lectures (100+) / all sizes / etc.]
 
 **3. Faculty Time Requirements**
 [Realistic estimate of prep time and ongoing time investment]
@@ -412,19 +413,19 @@ For EACH strategy in Stage 4, provide ALL of the following:
 [Low / Medium / High — with a brief rationale]
 
 **5. Educational Benefits**
-[Specific learning outcomes supported by this strategy, grounded in evidence — name the mechanisms]
+[Evidence-informed narrative describing outcomes and mechanisms. Use APA in-text citations (Author, year). Do NOT include raw effect sizes, statistics, or numbers from studies — translate findings into clear descriptive prose.]
 
 **6. Models & Templates**
-[Real examples from peer institutions in this priority order: BU IETL (bu.edu/ctl) first, then Derek Bok Center Harvard, Poorvu Center Yale, Vanderbilt CFT, Columbia CTL, UNC Chapel Hill CFT, Michigan CRLT. Provide URLs or describe the specific resource.]
+[Cite only specific, real resources with verified URLs from approved institutions. BU IETL (bu.edu/excellence) first. Then from this approved list only: ASU School of Life Sciences Teaching & Learning Center, ASU Graduate College Center for the Integration of Research Teaching & Learning, Brown University, Carnegie Mellon University Center for Teaching Excellence, Columbia University Center for Teaching & Learning, Cornell University, Duke Center for Academic Innovation, Kennesaw State University, Northwestern University, Penn State Schreyer Institute for Teaching Excellence, Princeton University, Purdue University, University of Michigan Center for Academic Innovation, UCLA, University of Virginia, Vanderbilt Center for Teaching. CRITICAL: Only include a resource if you are certain it exists at that URL. If you cannot verify a specific resource exists, omit that institution entirely. Never fabricate or approximate a resource. Never cite any institution not on this list.]
 
 **7. Technology Support**
 [Optional tools — start with low-barrier, free options. Indicate clearly if technology is not required.]
 
-**8. Research Citations**
-[APA 7th edition, organized by relevant discipline. Minimum 1–2 citations per strategy. Use ONLY real, verifiable citations — never fabricate references.]
-
-**9. Equity & Inclusion Notes**
+**8. Equity & Inclusion Notes**
 [UDL considerations: how this supports diverse learners, students with disabilities, first-generation students, multilingual learners, or other underrepresented groups]
+
+**9. Research Citations**
+[APA 7th edition. Minimum 1–2 real, verifiable citations per strategy. Never fabricate references. Do not include effect sizes or statistics in the citation entries.]
 
 ---
 
@@ -694,6 +695,9 @@ All major knowledge areas are now active. When a query falls outside these areas
 ## Behavioral Rules
 - ALWAYS provide citations — no anecdotal recommendations without evidence
 - NEVER fabricate references — if no specific research is available, say so explicitly
+- NEVER include raw effect sizes, statistics, or numerical study results in recommendations or citations — present evidence as descriptive prose only
+- NEVER cite or link to any institution or website not explicitly listed in the approved CTL source list above
+- NEVER fabricate or approximate a CTL resource — if you cannot verify it exists, omit it
 - Constrain answers to knowledge base — flag limitations honestly when a topic exceeds it
 - REFUSE clinical, medical, or legal advice — redirect to appropriate professionals
 - Tailor all responses to faculty context when profile information is available
@@ -703,52 +707,51 @@ All major knowledge areas are now active. When a query falls outside these areas
 
 ## Closing Statement (include at natural end of every consultation)
 ---
-*For additional support, contact the Institute for Excellence in Teaching & Learning at [excellence@bu.edu](mailto:excellence@bu.edu).*${pc}`;
+*If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at [excellence@bu.edu](mailto:excellence@bu.edu) to request one.*${pc}`;
+}
 }
 
 // ── SUMMARY GENERATION PROMPT ──────────────────────────────
 function buildSumReq() {
-  const pp = [profile.career, profile.role, profile.discipline, profile.context].filter(Boolean);
-  return `Based on the consultation above, generate a comprehensive Consultation Summary as plain text (no markdown formatting). Use clear section headers. Be thorough but concise.
+  return `Based on the consultation above, generate a concise, professional Consultation Summary. Use the exact section structure below. Write in clear prose — no raw markdown symbols, no bullet points using hyphens or asterisks (use plain text formatting only). Do not include faculty profile information.
 
 FACULTY CONSULTATION SUMMARY
 NEB TLC — New Evidence-Based Teaching & Learning Coach
 Institute for Excellence in Teaching & Learning, Boston University
-excellence@bu.edu | bu.edu/ctl
+excellence@bu.edu
 ${'-'.repeat(60)}
 DATE: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-FACULTY PROFILE: ${pp.length ? pp.join(' | ') : 'Not provided'}
 ${'-'.repeat(60)}
 
 SECTION 1: TEACHING CHALLENGE
 [Summarize the core challenge or question the faculty member brought to this consultation]
 
-SECTION 2: LEARNING OBJECTIVES IDENTIFIED
+SECTION 2: OBJECTIVE
 [What the faculty member hoped to achieve or improve]
 
 SECTION 3: TEACHING CONTEXT
-[Course context, class size, modality, constraints, as discussed]
+[Course context, class size, modality, and constraints as discussed]
 
 SECTION 4: STRATEGIES RECOMMENDED
-[For each strategy, include all 9 points:
-- Strategy Name and Overview
-- Best Fit Group Size
-- Faculty Time Requirements
-- Complexity Level
-- Educational Benefits
-- Models & Templates (with URLs where possible)
-- Technology Support
-- Research Citations (APA 7th edition)
-- Equity & Inclusion Notes / UDL Considerations]
+[For each strategy provide all 9 points in this order:
+1. Strategy Overview
+2. Best Fit: Student Group Size
+3. Faculty Time Requirements
+4. Complexity Level
+5. Educational Benefits (narrative, no statistics or effect sizes)
+6. Models and Templates (verified resources only)
+7. Technology Support
+8. Equity and Inclusion Notes
+9. Research Citations (APA 7th edition, no statistics)]
 
 SECTION 5: NEXT STEPS
 [What the faculty member said they would try first, or NEB TLC's recommended starting point]
 
 SECTION 6: ALL CITATIONS
-[Every reference cited during the consultation, APA 7th edition]
+[Every reference cited during the consultation, APA 7th edition, no statistics or effect sizes]
 
 ${'-'.repeat(60)}
-For additional support, contact the Institute for Excellence in Teaching & Learning at excellence@bu.edu`;
+If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at excellence@bu.edu to request one.`;
 }
 
 // ── PILOT MODAL ────────────────────────────────────────────
@@ -795,11 +798,8 @@ async function openSum() {
   document.getElementById('sumOv').classList.remove('hidden');
   const msg = document.getElementById('sumMsg');
   const content = document.getElementById('sumContent');
-  const dl = document.getElementById('dlBtn');
   msg.style.display = 'block';
   content.textContent = '';
-  dl.disabled = true;
-  sumTxt = '';
   try {
     const sumController = new AbortController();
     const sumTimeout = setTimeout(() => sumController.abort(), 90000);
@@ -817,9 +817,7 @@ async function openSum() {
     clearTimeout(sumTimeout);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
-    sumTxt = d.content?.[0]?.text || 'Summary generation failed — please try again.';
-    content.textContent = sumTxt;
-    dl.disabled = false;
+    content.textContent = d.content?.[0]?.text || 'Summary generation failed — please try again.';
   } catch(e) {
     console.error('NEB TLC summary error:', e);
     content.textContent = 'Summary could not be generated (' + (e.message || 'network error') + '). Please try again or contact excellence@bu.edu.';
@@ -828,21 +826,56 @@ async function openSum() {
   }
 }
 function closeSum() { document.getElementById('sumOv').classList.add('hidden'); }
-function dlSum() {
-  if (!sumTxt) return;
-  const a = Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(new Blob([sumTxt], {type:'text/plain'})),
-    download: 'NEB-TLC-Summary-' + new Date().toISOString().slice(0,10) + '.txt'
-  });
-  a.click(); URL.revokeObjectURL(a.href);
-}
 function printSum() {
   const txt = document.getElementById('sumContent').textContent;
   const w = window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>NEB TLC Consultation Summary</title>
-  <style>body{font-family:Georgia,serif;font-size:11.5pt;max-width:700px;margin:40px auto;color:#1a2332;line-height:1.75}pre{white-space:pre-wrap;font-family:Georgia,serif}</style>
-  </head><body><pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></body></html>`);
-  w.document.close(); w.print();
+  // Convert plain text structure into styled HTML for print
+  const lines = txt.split('\n');
+  let html = '';
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.startsWith('FACULTY CONSULTATION SUMMARY')) {
+      html += `<h1>${line}</h1>`;
+    } else if (line.startsWith('NEB TLC')) {
+      html += `<p class="subtitle">${line}</p>`;
+    } else if (line.startsWith('Institute for') || line.startsWith('excellence@') || line.startsWith('DATE:')) {
+      html += `<p class="meta">${line}</p>`;
+    } else if (/^-{3,}$/.test(line.trim())) {
+      html += `<hr>`;
+    } else if (/^SECTION \d+:/.test(line)) {
+      html += `<h2>${line}</h2>`;
+    } else if (/^\d+\.\s+[A-Z]/.test(line)) {
+      html += `<h3>${line}</h3>`;
+    } else if (line.trim() === '') {
+      html += `<div class="spacer"></div>`;
+    } else {
+      html += `<p>${line}</p>`;
+    }
+  }
+  w.document.write(`<!DOCTYPE html>
+<html><head>
+<title>NEB TLC Consultation Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { margin: 1in; }
+  body { font-family: 'DM Sans', sans-serif; font-size: 10.5pt; color: #1E2A36; line-height: 1.65; max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 15pt; font-weight: 700; color: #17375E; margin: 0 0 4px 0; }
+  .subtitle { font-size: 9.5pt; color: #17375E; font-weight: 500; margin: 0 0 2px 0; }
+  .meta { font-size: 8.5pt; color: #606B76; margin: 0 0 2px 0; }
+  hr { border: none; border-top: 2px solid #CC0000; margin: 14px 0; }
+  h2 { font-size: 11pt; font-weight: 700; color: #17375E; border-left: 3px solid #CC0000; padding-left: 9px; margin: 20px 0 6px 0; }
+  h3 { font-size: 10pt; font-weight: 600; color: #1E4A7A; margin: 14px 0 4px 0; }
+  p { margin: 0 0 6px 0; font-size: 10pt; }
+  .spacer { height: 6px; }
+  @media print {
+    body { font-size: 10pt; }
+    h1 { font-size: 14pt; }
+    a { color: #17375E; text-decoration: none; }
+  }
+</style>
+</head><body>${html}</body></html>`);
+  w.document.close();
+  w.print();
 }
 
 // ── CHAT ───────────────────────────────────────────────────
@@ -955,7 +988,7 @@ function useStarter(q) {
 
 function newConsult() {
   if (history.length && !confirm('Start a new consultation? The current conversation will be cleared.')) return;
-  history=[]; hasRec=false; sumTxt='';
+  history=[]; hasRec=false;
   document.getElementById('sumBar').classList.remove('on');
   document.getElementById('chatInner').innerHTML = `
     <div class="welcome" id="welcome">
