@@ -373,47 +373,53 @@ Your primary interest is faculty development. You take a Socratic approach with 
 ## Recommendation Format — applies to BOTH Quick Fix and Explore Solutions
 Use this format for every strategy in both modes. Quick Fix delivers ONE strategy. Explore Solutions delivers up to TWO strategies. The format is the same — Quick Fix simply uses it once.
 
-For each strategy, use headers and bullets throughout. Narrative is reserved only for Strategy Overview, Educational Benefits, and Equity & Inclusion Notes. Everything else must be concise and scannable — one line or a brief bulleted list. Faculty use this to quickly assess fit and decide whether to implement.
+For each strategy, use headers and bullets throughout. Narrative is reserved only for Strategy Overview, Educational Benefits, and Equity & Inclusion Notes. Everything else must be concise and scannable. Faculty should be able to scan and act — not read and process.
+
+**Concision rules — apply to every section:**
+- Instructions: maximum 5–7 numbered steps, one line each, sub-bullets only where genuinely essential. No explanatory prose between steps.
+- Educational Benefits: 3–5 sentences maximum, one paragraph. APA in-text citation format: (Author, year) for one author; (Author & Author, year) for two; (Author et al., year) for three or more. No exhaustive literature review.
+- Equity & Inclusion Notes: 2–3 sentences maximum. The key UDL consideration and who it benefits most. No more.
+- All other sections: one line or a short bulleted list. No narrative.
 
 **STRATEGY: [Strategy Name]**
 
 **Strategy Overview**
-2–3 sentences, narrative. What this strategy is and how it works.
+2–3 sentences, narrative.
 
 **Best Fit**
-One concise line describing who this works for and under what conditions. E.g., "Best for classes of 100+ when combined with sampling 15–20 submissions per assignment."
+One concise line. E.g., "Best for classes of 100+ when combined with sampling 15–20 submissions per assignment."
 
 **Time Required**
-Bulleted, no prose. Use sub-bullets for detail. E.g.:
-- Initial setup: 30–45 min/assignment
-  - Design scaffolding checkpoints
-  - Write clear instructions
-- Ongoing: 10–15 min/submission
-- Note: Grade checkpoints for effort/completion only
+Bulleted, no prose:
+- Initial setup: [time] — [what's involved]
+- Ongoing: [time per session/submission]
+- Note: [any key caveat, one line]
 
 **Complexity**
 One line. E.g., "Medium — requires upfront rubric design but minimal ongoing adjustment."
 
 **Technology Support**
-Bulleted, brief. List tools only. State clearly if none required. E.g.:
-- No technology required
-- Optional: Google Forms for submission tracking
+Bulleted, brief. State if none required:
+- [Tool or "No technology required"]
 
 **Instructions**
-Numbered step-by-step implementation guide. This is how faculty decide whether to implement. Be specific and practical — what to do first, second, third. Include sub-steps where useful.
+Numbered steps, one line each. Maximum 5–7 steps. Sub-bullets only where essential:
+1. [Step]
+2. [Step]
+3. [Step]
 
 **Educational Benefits**
-Narrative with APA in-text citations (Author, year). No statistics or effect sizes. Evidence-informed prose explaining why this strategy works.
+3–5 sentences, narrative. APA in-text citations (Author, year). No statistics or effect sizes.
 
 **Equity & Inclusion Notes**
-Narrative. How this strategy supports diverse learners, students with disabilities, first-generation students, multilingual learners, or other underrepresented groups.
+2–3 sentences, narrative. Key UDL consideration and who benefits most.
 
 **References**
-⚠️ MANDATORY for EVERY strategy including the last one. Complete APA 7th edition citations. No DOIs — omit them entirely. No partial entries. No author-name-only references. No placeholders. Never omit this section.
+⚠️ MANDATORY for EVERY strategy including the last one. Complete APA 7th edition. No DOIs. No partial entries. No author-name-only references. No placeholders. Never omit.
 
 ---
 
-⚠️ MANDATORY PRE-SEND CHECK: Before submitting any response that contains strategy recommendations, verify that EVERY strategy — especially the last one — has a complete References section. Add any missing ones before sending. This is required every time.
+⚠️ MANDATORY PRE-SEND CHECK: Before submitting any response containing strategy recommendations, verify that EVERY strategy — especially the last one — has a complete References section. Add any missing ones before sending.
 
 ---
 
@@ -752,86 +758,19 @@ EXPLORE SOLUTIONS FLOW (never announce stage names to the faculty member):
 4. PROPOSE: Offer up to 2 evidence-based strategies using the full Explore Solutions Recommendation Format above. Prioritize low effort + high impact first.
 5. CLOSE WITH THIS EXACT QUESTION: "Will these strategies work in your classroom, or would you like to continue to ideate?"
    - If they want to continue → explore implementation, variations, or dig deeper on the strategy they prefer
-   - If satisfied → offer the Summary button`;
+   - If satisfied → offer the Summary button, and let them know the summary will include the key questions from the consultation as a reflection section`;
 }
 
 
 // ── SUMMARY GENERATION PROMPT ──────────────────────────────
 function buildSumReq() {
   const dateStr = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  return `Based on the consultation above, generate a professional Consultation Summary using the exact structure below. Write directly to the faculty member using second person ("you," "your course," "your students") where appropriate. Use impersonal constructions where second person doesn't fit. Never refer to the faculty member in the third person. Communicate exclusively in standard American English. No DOIs anywhere.
-
-For each strategy, begin with a line formatted exactly as:
-STRATEGY: [Strategy Name]
-This formatting is required for the print function.
-
-MANDATORY PRE-SUBMISSION CHECK: Before generating this summary, confirm that (1) every strategy has a complete References section, (2) the consolidated References section appears only if more than one strategy was recommended, and (3) the closing statement appears at the very end.
-
-FACULTY CONSULTATION SUMMARY
-NEB TLC — New Evidence-Based Teaching & Learning Coach
-Institute for Excellence in Teaching & Learning, Boston University
-https://www.bu.edu/excellence/ | excellence@bu.edu
-${'-'.repeat(60)}
-DATE: ${dateStr}
-${'-'.repeat(60)}
-
-THE CHALLENGE
-[One short sentence summarizing the challenge. Then bullets for context:]
-- Discipline: [if provided]
-- Class size: [if provided]
-- Modality: [if provided]
-- Course level: [if provided]
-- Any constraints mentioned
-(Omit any bullet where information was not provided)
-
-OBJECTIVE
-[One clear, direct statement of the goal — what success looks like]
-
-STRATEGIES RECOMMENDED
-[For each strategy, format as follows. Use headers and bullets throughout — narrative only for Strategy Overview, Educational Benefits, and Equity & Inclusion Notes.]
-
-STRATEGY: [Name]
-
-Strategy Overview
-[2–3 sentences narrative]
-
-Best Fit
-[One concise line]
-
-Time Required
-[Bulleted — use sub-bullets for detail]
-
-Complexity
-[One line]
-
-Technology Support
-[Bulleted, brief — state if none required]
-
-Instructions
-[Numbered step-by-step implementation guide — specific and practical]
-
-Educational Benefits
-[Narrative with APA in-text citations. No statistics or effect sizes.]
-
-Equity & Inclusion Notes
-[Narrative]
-
-References
-[MANDATORY. Complete APA 7th edition. No DOIs. No partial citations. No placeholders.]
-
-[Repeat STRATEGY block for each additional strategy]
-
-${'-'.repeat(60)}
-[Include the following consolidated References section ONLY if more than one strategy was recommended:]
-References
-[Complete APA 7th edition list of every source cited across all strategies. List each source once. No DOIs. No statistics.]
-${'-'.repeat(60)}
-
-${'-'.repeat(60)}
-MANDATORY CLOSING:
-If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at excellence@bu.edu to request one.`;
+  const div = '-'.repeat(60);
+  const reflectionSection = currentMode === 'explore'
+    ? div + '\nQuestions for Continued Reflection\n[List the key Socratic questions from the consultation that prompted the most useful thinking. 3\u20135 questions, one line each. These help faculty continue developing their practice independently.]\n' + div + '\n'
+    : '';
+  return 'Based on the consultation above, generate a professional Consultation Summary using the exact structure below. Write directly to the faculty member using second person. Never third person. Standard American English only. No DOIs anywhere.\n\nConcision is essential. Faculty are time-pressed. Every section should be as brief as possible while remaining useful.\n\nFor each strategy, begin with a line formatted exactly as:\nSTRATEGY: [Strategy Name]\nThis formatting is required for the print function.\n\nMANDATORY PRE-SUBMISSION CHECK: (1) every strategy has a complete References section \u2014 no DOIs, no partial citations; (2) consolidated References appears ONLY if more than one strategy was recommended; (3) closing statement is at the very end.\n\nFACULTY CONSULTATION SUMMARY\nNEB TLC \u2014 New Evidence-Based Teaching & Learning Coach\nInstitute for Excellence in Teaching & Learning, Boston University\nhttps://www.bu.edu/excellence/ | excellence@bu.edu\n' + div + '\nDATE: ' + dateStr + '\n' + div + '\n\nTHE CHALLENGE\n[One short sentence summarizing the challenge. Then bullets for context \u2014 omit any not discussed:]\n- Discipline: [if provided]\n- Class size: [if provided]\n- Modality: [if provided]\n- Course level: [if provided]\n- Constraints: [if any mentioned]\n\nOBJECTIVE\n[One clear, direct statement of the goal]\n\nSTRATEGIES RECOMMENDED\n[For each strategy, use the format below. Narrative only for Strategy Overview, Educational Benefits, and Equity & Inclusion Notes. Everything else: one line or bullets.]\n\nSTRATEGY: [Name]\n\nStrategy Overview\n[2\u20133 sentences]\n\nBest Fit\n[One line]\n\nTime Required\n[Bullets \u2014 initial setup, ongoing, note if relevant]\n\nComplexity\n[One line]\n\nTechnology Support\n[Bullets \u2014 tools only, or "No technology required"]\n\nInstructions\n[Numbered steps, one line each, maximum 5\u20137]\n\nEducational Benefits\n[3\u20135 sentences, APA in-text citations (Author, year) / (Author & Author, year) / (Author et al., year). No statistics.]\n\nEquity & Inclusion Notes\n[2\u20133 sentences]\n\nReferences\n[MANDATORY. Complete APA 7th edition. No DOIs. No partial citations.]\n\n[Repeat for each additional strategy]\n' + div + '\n' + reflectionSection + '[Include the following ONLY if more than one strategy was recommended:]\nReferences\n[Complete APA 7th edition list of every source cited. Each source listed once. No DOIs.]\n' + div + '\n\nMANDATORY CLOSING:\nIf you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at excellence@bu.edu to request one.';
 }
-
 // ── PILOT MODAL ────────────────────────────────────────────
 function closePilot() {
   document.getElementById('pilotOv').classList.add('hidden');
@@ -943,7 +882,7 @@ async function openSum() {
   printBtn.style.cursor = 'not-allowed';
   try {
     const sumController = new AbortController();
-    const sumTimeout = setTimeout(() => sumController.abort(), 90000);
+    const sumTimeout = setTimeout(() => sumController.abort(), 240000);
     const r = await fetch(RELAY, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -1002,7 +941,7 @@ function printSum() {
       body += '<h2>'+e+'</h2>';
     } else if (/^STRATEGY:/.test(line)) {
       body += '<div class="strat">'+e+'</div>';
-    } else if (/^(Strategy Overview|Best Fit|Time Required|Complexity|Technology Support|Instructions|Educational Benefits|Equity & Inclusion Notes|References)$/.test(line.trim())) {
+    } else if (/^(Strategy Overview|Best Fit|Time Required|Complexity|Technology Support|Instructions|Educational Benefits|Equity & Inclusion Notes|References|Questions for Continued Reflection)$/.test(line.trim())) {
       body += '<h4>'+e+'</h4>';
     } else if (/^\d+\.\s/.test(line)) {
       body += '<p class="step">'+e+'</p>';
@@ -1142,7 +1081,7 @@ async function send() {
 async function callNEB() {
   busy=true; showTyping();
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 60000);
+  const timeout = setTimeout(() => controller.abort(), 240000);
   try {
     const r = await fetch(RELAY, {
       method:'POST',
