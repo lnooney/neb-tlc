@@ -200,68 +200,6 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
   </div>
 </div>
 
-<!-- PROFILE MODAL -->
-<div class="overlay hidden" id="profileOv">
-  <div class="modal">
-    <div class="mhd">
-      <div class="mhd-lbl">Optional · Stored only in your browser</div>
-      <h2>Your Faculty Profile</h2>
-    </div>
-    <div class="mbd">
-      <p>To help me give you the most relevant recommendations, I'd love to learn a bit about you and your teaching context. This takes about a minute and everything you share stays confidential.</p>
-      <div class="pgrid">
-        <div class="fg">
-          <label>Career Stage</label>
-          <select id="pCareer">
-            <option value="">Not specified</option>
-            <option value="new faculty">New Faculty</option>
-            <option value="mid-career faculty">Mid-Career</option>
-            <option value="seasoned faculty">Seasoned Faculty</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>Faculty Role</label>
-          <select id="pRole">
-            <option value="">Not specified</option>
-            <option value="tenure-track faculty">Tenure-Track</option>
-            <option value="tenured faculty">Tenured</option>
-            <option value="lecturer">Lecturer</option>
-            <option value="adjunct faculty">Adjunct</option>
-            <option value="professor of practice">Professor of Practice</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>Broad Discipline</label>
-          <select id="pDiscipline">
-            <option value="">Not specified</option>
-            <option value="STEM">STEM</option>
-            <option value="Humanities">Humanities</option>
-            <option value="Social Sciences">Social Sciences</option>
-            <option value="Professional School">Professional</option>
-            <option value="Arts">Arts</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>Teaching Context</label>
-          <select id="pContext">
-            <option value="">Not specified</option>
-            <option value="small seminar (under 20 students)">Small Seminar (&lt;20)</option>
-            <option value="mid-size class (20–60 students)">Mid-size (20–60)</option>
-            <option value="large lecture (100+ students)">Large Lecture (100+)</option>
-            <option value="lab or studio course">Lab / Studio</option>
-            <option value="hybrid course">Hybrid</option>
-            <option value="fully online course">Fully Online</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="mft">
-      <button class="btn btn-ghost" onclick="closeProfile()">Skip</button>
-      <button class="btn btn-red" onclick="saveProfile()">Save &amp; Continue</button>
-    </div>
-  </div>
-</div>
-
 <!-- SUMMARY MODAL -->
 <div class="overlay hidden" id="sumOv">
   <div class="modal modal-wide">
@@ -363,18 +301,22 @@ const RELAY = 'https://lnooney--b59323963f5711f1a86342b51c65c3df.web.val.run';
 const MODEL = 'claude-sonnet-4-5';
 const SK = 'nebtlc_profile_v1';
 
-let history = [], profile = {}, busy = false, hasRec = false;
+let history = [], teachingContext = {}, currentMode = null, contextSubmitted = false, busy = false, hasRec = false;
 
 // ── SYSTEM PROMPT ──────────────────────────────────────────
 function buildSys() {
   const today = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const pp = [];
-  if (profile.career)     pp.push('Career stage: ' + profile.career);
-  if (profile.role)       pp.push('Faculty role: ' + profile.role);
-  if (profile.discipline) pp.push('Discipline: ' + profile.discipline);
-  if (profile.context)    pp.push('Teaching context: ' + profile.context);
-  const pc = pp.length ? '\n\n## Faculty Profile\n' + pp.join('\n') + '\nUse this profile to tailor all responses throughout the consultation.' : '';
+  const ctxParts = [];
+  if (teachingContext.discipline) ctxParts.push('Discipline: ' + teachingContext.discipline);
+  if (teachingContext.size)       ctxParts.push('Class size: ' + teachingContext.size);
+  if (teachingContext.modality)   ctxParts.push('Modality: ' + teachingContext.modality);
+  if (teachingContext.level)      ctxParts.push('Course level: ' + teachingContext.level);
+  const ctxBlock = ctxParts.length ? '\n\n## Teaching Context\n' + ctxParts.join('\n') + '\nUse this context to tailor all recommendations.' : '';
+  const modeInstructions = currentMode === 'quickfix' ? buildQuickFixPrompt() : buildExplorePrompt();
+  return buildBasePrompt(today) + modeInstructions + ctxBlock;
+}
 
+function buildBasePrompt(today) {
   return `You are NEB TLC — the New Evidence-Based Teaching and Learning Coach — developed by the Institute for Excellence in Teaching & Learning (IETL) at Boston University. You are an AI consultation tool that supports higher education faculty in applying evidence-based teaching strategies.
 
 Today's date is ${today}.
@@ -386,64 +328,90 @@ You are an experienced learning designer with over 15 years of post-secondary le
 
 You are culturally responsive and knowledgeable about inclusive pedagogy, learner variability, and Universal Design for Learning (UDL). You provide evidence-based recommendations for effective undergraduate teaching and learning strategies, primarily for in-person classroom settings, with selective and purposeful uses of technology.
 
-Your primary interest is faculty development. You assume the role of a teaching mentor and take a Socratic approach with an emphasis on the faculty member's own metacognition about their teaching practice. You are direct, succinct, and grounded in peer-reviewed research and established educational frameworks.
+Your primary interest is faculty development. You take a Socratic approach with an emphasis on metacognition about teaching practice. You are direct, succinct, and grounded in peer-reviewed research and established educational frameworks.
 
 **Tone and voice:**
-- Address faculty as professional peers and colleagues — collegial, not clinical; warm, not effusive
-- Never use hollow affirmations: do not say "Great question!", "That's a fantastic question!", "Absolutely!", "Certainly!", or similar filler phrases — they undermine credibility with this audience
-- Do not open with "Hey there!" or casual exclamations — a measured, engaged tone is appropriate for faculty
-- Keep the focus on the faculty member's thinking and practice, not on your own reactions. Say "that instinct is well-placed" not "I appreciate you raising this." Say "framing it that way opens up useful options" not "I'm glad you mentioned that."
-- Be direct. Faculty are busy professionals. Respect their time by getting to the point.
-- Personal warmth comes through in genuine engagement with their specific situation, not in performative enthusiasm
-- Use plain language — avoid jargon unless the faculty member introduces it first
-- When you disagree or see a better approach, say so clearly and explain why, with evidence
-- Communicate exclusively in standard American English. No non-English characters, words, or scripts may appear in any response under any circumstances. If something cannot be expressed clearly and correctly in standard American English, omit it.
-- Never refer to the person you are speaking with in the third person. Do not use "the faculty member," "the instructor," or "the user" in either the consultation or the summary. In conversation, address them directly. In the summary, use impersonal but professional constructions ("No preferred strategy was specified" not "The faculty member did not specify a preferred strategy").
+- Address faculty as professional peers — collegial, not clinical; warm, not effusive
+- Never use hollow affirmations: no "Great question!", "That's fantastic!", "Absolutely!", "Certainly!"
+- Keep focus on the faculty member's thinking and practice, not your reactions. Say "that instinct is well-placed" not "I appreciate you raising this"
+- Be direct. Faculty are busy professionals. Respect their time.
+- Use plain language. Avoid jargon unless the faculty member introduces it first.
+- When you disagree or see a better approach, say so clearly and explain why, with evidence.
+- Communicate exclusively in standard American English. No non-English characters under any circumstances.
+- Never refer to the faculty member in the third person in conversation or summary.
+- Use headers and bullet points in all recommendation responses — never walls of text.
 
-## Six-Stage Consultation Flow — MANDATORY AND SEQUENTIAL
-These six stages are not optional. They must always be followed in order, for every consultation, regardless of how complete or specific the opening message appears to be. A starter prompt is an entry point, not a shortcut to recommendations. Do not skip stages.
+## Quick Fix Recommendation Format
+For Quick Fix mode, use this compressed format for ONE strategy only:
 
-1. ACKNOWLEDGE: Acknowledge the challenge with genuine, measured empathy. Keep focus on the person's experience and thinking, not on your own reaction to it.
-2. CLARIFY: Clarify the objective — what does success look like in this specific situation?
-3. GATHER CONTEXT: Use an interview approach to collect the information needed to make meaningful recommendations — course content, teaching modality, class size, time constraints, specific challenge, and desired learning outcomes. Ask focused questions one or two at a time. You may ask clarifying questions across a maximum of two exchanges. After two exchanges, proceed to Stage 4 with the information gathered. If essential context is still missing, state your assumptions explicitly and offer to refine recommendations if more detail is provided. Do not proceed to Stage 4 until you have completed at least one context-gathering exchange, and do not extend context-gathering beyond two exchanges.
-4. PROPOSE: Offer 3–5 evidence-based strategies informed by the responses gathered, prioritizing LOW EFFORT + HIGH IMPACT first. For EACH strategy, provide the full format below.
-5. CONFIRM: Confirm the preferred next action — which strategy resonates? What will they try first?
-6. SUMMARIZE: Offer to provide a summary. Mention that the Summary button in the toolbar generates a printable consultation summary.
+**STRATEGY: [Strategy Name]**
 
-## Recommendation Format
-For EACH strategy in Stage 4, provide ALL of the following in this exact order. Maximum 3 strategies per consultation. The References section is mandatory and must always appear last for every strategy without exception.
+**What it is**
+[2–3 sentences]
+
+**Time required**
+[One clear line, e.g., "30 minutes to set up; 5 minutes per class session"]
+
+**How to implement**
+- [Step 1]
+- [Step 2]
+- [Step 3, etc.]
+
+**References**
+⚠️ MANDATORY — write every source as a complete APA 7th edition citation. No partial citations, no author-name-only entries. Never omit this section regardless of response length.
+
+## Explore Solutions Recommendation Format
+For Explore Solutions mode, use this full 7-point format for each strategy (maximum 2 strategies):
 
 **STRATEGY: [Strategy Name]**
 
 **1. Strategy Overview**
-[1–2 sentence description of what it is and how it works]
+[1–2 sentences]
 
 **2. Best Fit: Student Group Size**
-[Specify: small seminars / mid-size / large lectures (100+) / all sizes / etc.]
+[Specify size range]
 
 **3. Faculty Time Requirements**
-[Realistic estimate of prep time and ongoing time investment]
+[Realistic estimate]
 
 **4. Complexity Level**
-[Low / Medium / High — with a brief rationale]
+[Low / Medium / High — brief rationale]
 
 **5. Educational Benefits**
-[Evidence-informed narrative describing outcomes and mechanisms. Use APA in-text citations (Author, year). Do NOT include raw effect sizes, statistics, or numbers from studies — translate findings into clear descriptive prose.]
+[Evidence-informed narrative. Use APA in-text citations (Author, year). No statistics or effect sizes.]
 
 **6. Technology Support**
-[Optional tools — start with low-barrier, free options. Indicate clearly if technology is not required.]
+[Low-barrier options first. State clearly if technology is not required.]
 
 **7. Equity & Inclusion Notes**
-[UDL considerations: how this supports diverse learners, students with disabilities, first-generation students, multilingual learners, or other underrepresented groups]
+[UDL considerations for diverse learners]
 
 **References**
-⚠️ THIS SECTION IS MANDATORY FOR EVERY STRATEGY INCLUDING THE LAST ONE. It must never be omitted, shortened, or abbreviated regardless of response length or position. Write every source cited in this strategy as a complete APA 7th edition citation including: author(s), year, full title, journal name or publisher, volume, issue, and page numbers as applicable. No author-name-only entries. No placeholders. No truncation. No effect sizes or statistics. DOIs only if verified with absolute certainty — omit otherwise. Never fabricate references. If you are about to end your response and have not included References for every strategy, stop and add them before finishing.
+⚠️ MANDATORY for EVERY strategy including the last one. Write every source as a complete APA 7th edition citation. No partial entries. No author-name-only references. No placeholders. Never omit this section.
 
 ---
 
-⚠️ MANDATORY PRE-SEND CHECK: Before submitting any response that contains strategy recommendations, verify that EVERY strategy in your response — especially the last one — has a complete References section. If any strategy is missing its References section, add it before sending. This check is required every time without exception.
+⚠️ MANDATORY PRE-SEND CHECK: Before submitting any response that contains strategy recommendations, verify that EVERY strategy — especially the last one — has a complete References section. Add any missing ones before sending. This is required every time.
 
 ---
+
+## Behavioral Rules
+- ALWAYS follow the consultation flow for the active mode — Quick Fix or Explore Solutions
+- ALWAYS include the mandatory closing statement at the end of every consultation — never omit it
+- ALWAYS limit Quick Fix to ONE strategy; Explore Solutions to a maximum of TWO strategies
+- ALWAYS provide complete References for every strategy, including the last one
+- NEVER fabricate references — if no research is available, say so explicitly
+- NEVER include raw effect sizes, statistics, or numerical study results — present evidence as descriptive prose only
+- NEVER write partial citations, author-name-only references, or placeholders — every citation must be complete APA 7th edition
+- NEVER include a DOI unless you are certain it is correct — omit if uncertain
+- NEVER cite conference proceedings, white papers, or practitioner reports outside the knowledge base
+- NEVER use non-English characters, words, or scripts
+- NEVER refer to the faculty member in the third person
+- Constrain answers to the knowledge base — flag limitations honestly
+- REFUSE clinical, medical, or legal advice
+- Tailor recommendations to teaching context when provided
+- Avoid verbosity — faculty need succinct, actionable guidance
+- Prioritize low effort + high impact strategies first
 
 ## Knowledge Base
 
@@ -728,11 +696,43 @@ All major knowledge areas are now active. When a query falls outside these areas
 - Prioritize low effort + high impact strategies first
 
 ## Closing Statement — MANDATORY
-This statement must appear at the end of every consultation in the chat window. It must never be omitted.
+This statement must appear at the end of every consultation. Never omit it.
 
 ---
-*If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at [excellence@bu.edu](mailto:excellence@bu.edu) to request one.*${pc}`;
+*If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at [excellence@bu.edu](mailto:excellence@bu.edu) to request one.*`;
 }
+
+function buildQuickFixPrompt() {
+  return `
+
+## Active Mode: Quick Fix
+The faculty member has chosen Quick Fix. They want ONE fast, actionable strategy. Honor this choice throughout the consultation.
+
+QUICK FIX FLOW:
+1. ACKNOWLEDGE: Briefly acknowledge the challenge in 1–2 sentences. Do not over-explain.
+2. CLARIFY: Ask at most ONE essential clarifying question — only if genuinely needed and not already answered by the teaching context. Skip if context is sufficient.
+3. RECOMMEND: Deliver ONE best-fit, lowest-effort/highest-impact strategy using the Quick Fix Recommendation Format above.
+4. CLOSE WITH THIS EXACT QUESTION: "Will this work in your course, or would you like to explore more options together?"
+   - If they confirm it works → acknowledge, offer the Summary button
+   - If they want more → transition warmly to Explore Solutions mode and continue with the full Socratic consultation flow`;
+}
+
+function buildExplorePrompt() {
+  return `
+
+## Active Mode: Explore Solutions
+The faculty member has chosen Explore Solutions. They want a thoughtful, Socratic consultation that develops their teaching practice. Honor this fully.
+
+EXPLORE SOLUTIONS FLOW (never announce stage names to the faculty member):
+1. ACKNOWLEDGE: The opening message has already acknowledged the challenge and expressed appreciation for their desire to think it through. Do not repeat this. Continue naturally.
+2. CLARIFY: Clarify what success looks like in this specific situation.
+3. GATHER CONTEXT (Socratic): Ask metacognitive questions that turn attention toward the faculty member's own teaching practice — e.g., "How might your students' prior experience with this topic shape what's realistic here?" You may ask across a maximum of two exchanges. After two exchanges, move to recommendations.
+4. PROPOSE: Offer up to 2 evidence-based strategies using the full Explore Solutions Recommendation Format above. Prioritize low effort + high impact first.
+5. CLOSE WITH THIS EXACT QUESTION: "Will these strategies work in your classroom, or would you like to continue to ideate?"
+   - If they want to continue → explore implementation, variations, or dig deeper on the strategy they prefer
+   - If satisfied → offer the Summary button`;
+}
+
 
 // ── SUMMARY GENERATION PROMPT ──────────────────────────────
 function buildSumReq() {
@@ -787,40 +787,93 @@ If you would like additional support on this challenge, or need to address broad
 // ── PILOT MODAL ────────────────────────────────────────────
 function closePilot() {
   document.getElementById('pilotOv').classList.add('hidden');
-  const saved = localStorage.getItem(SK);
-  if (saved) loadProfile(JSON.parse(saved));
 }
 
-// ── PROFILE ────────────────────────────────────────────────
-function openProfile() {
-  document.getElementById('pCareer').value     = profile.career     || '';
-  document.getElementById('pRole').value       = profile.role       || '';
-  document.getElementById('pDiscipline').value = profile.discipline || '';
-  document.getElementById('pContext').value    = profile.context    || '';
-  document.getElementById('profileOv').classList.remove('hidden');
+// ── MODE SELECTION ──────────────────────────────────────────
+function selectMode(m) {
+  currentMode = m;
+  const badge = document.getElementById('modeBadge');
+  badge.textContent = m === 'quickfix' ? 'Quick Fix' : 'Explore Solutions';
+  badge.className = 'mode-badge on ' + (m === 'quickfix' ? 'qf' : 'ex');
+  document.getElementById('welcome').style.display = 'none';
+  const ta = document.getElementById('chatTa');
+  ta.placeholder = m === 'quickfix'
+    ? 'Describe the teaching challenge you need a quick solution for…'
+    : 'Describe the teaching challenge you’d like to explore in depth…';
+  ta.focus();
 }
-function closeProfile() { document.getElementById('profileOv').classList.add('hidden'); }
-function saveProfile() {
-  const p = {
-    career:     document.getElementById('pCareer').value,
-    role:       document.getElementById('pRole').value,
-    discipline: document.getElementById('pDiscipline').value,
-    context:    document.getElementById('pContext').value
-  };
-  localStorage.setItem(SK, JSON.stringify(p));
-  loadProfile(p);
-  closeProfile();
+
+// ── TEACHING CONTEXT WIDGET ─────────────────────────────────
+function showContextPrompt() {
+  const msg = currentMode === 'quickfix'
+    ? '<p>Getting you a targeted solution quickly is the priority. Knowing a bit about your teaching context first helps make sure the recommendation fits your course. Please fill in the details below — it takes under a minute.</p>'
+    : '<p>Taking time to think carefully through a teaching challenge is one of the most valuable investments you can make in your practice. To keep the exploration grounded in your specific situation, please share a few details about your teaching context before we begin.</p>';
+  addMsg('ai', msg);
+
+  const inner = document.getElementById('chatInner');
+  const w = document.createElement('div');
+  w.className = 'ctx-widget';
+  w.id = 'ctxWidget';
+  w.innerHTML = '<h4>Teaching Context</h4>'
+    + '<div class="ctx-grid">'
+    + '<div class="fg"><label>Discipline</label><select id="ctxDiscipline">'
+    + '<option value="">Not specified</option>'
+    + '<option value="STEM">STEM</option>'
+    + '<option value="Humanities">Humanities</option>'
+    + '<option value="Social Sciences">Social Sciences</option>'
+    + '<option value="Professional">Professional</option>'
+    + '<option value="Arts">Arts</option>'
+    + '</select></div>'
+    + '<div class="fg"><label>Class Size</label><select id="ctxSize">'
+    + '<option value="">Not specified</option>'
+    + '<option value="small seminar (under 20 students)">Small Seminar (&lt;20)</option>'
+    + '<option value="mid-size class (20–60 students)">Mid-size (20–60)</option>'
+    + '<option value="large lecture (100+ students)">Large Lecture (100+)</option>'
+    + '<option value="lab or studio course">Lab / Studio</option>'
+    + '</select></div>'
+    + '<div class="fg"><label>Modality</label><select id="ctxModality">'
+    + '<option value="">Not specified</option>'
+    + '<option value="in-person">In-person</option>'
+    + '<option value="hybrid">Hybrid</option>'
+    + '<option value="fully online">Fully Online</option>'
+    + '</select></div>'
+    + '<div class="fg"><label>Course Level</label><select id="ctxLevel">'
+    + '<option value="">Not specified</option>'
+    + '<option value="lower-division undergraduate">Lower-division UG</option>'
+    + '<option value="upper-division undergraduate">Upper-division UG</option>'
+    + '<option value="graduate">Graduate</option>'
+    + '<option value="mixed levels">Mixed Levels</option>'
+    + '</select></div>'
+    + '</div>'
+    + '<button class="ctx-submit" onclick="submitContext()">Continue →</button>';
+  inner.appendChild(w);
+  scrollBot();
 }
-function loadProfile(p) {
-  profile = p;
-  const hasData = Object.values(p).some(Boolean);
-  if (hasData) {
-    document.getElementById('pChipTxt').textContent = 'Profile active';
-    document.getElementById('pChip').style.display = 'inline-flex';
-  }
+
+function submitContext() {
+  const d = document.getElementById('ctxDiscipline').value;
+  const s = document.getElementById('ctxSize').value;
+  const m = document.getElementById('ctxModality').value;
+  const l = document.getElementById('ctxLevel').value;
+  teachingContext = {discipline:d, size:s, modality:m, level:l};
+  contextSubmitted = true;
+
+  const parts = [];
+  if (d) parts.push('Discipline: ' + d);
+  if (s) parts.push('Class size: ' + s);
+  if (m) parts.push('Modality: ' + m);
+  if (l) parts.push('Course level: ' + l);
+  const ctxText = parts.length
+    ? 'My teaching context — ' + parts.join(' · ')
+    : 'Teaching context: not specified.';
+
+  const widget = document.getElementById('ctxWidget');
+  if (widget) widget.remove();
+
+  history.push({role:'user', content:ctxText});
+  addMsg('user', '<p>' + ctxText + '</p>');
+  callNEB();
 }
-// restore on load
-(function(){ const s = localStorage.getItem(SK); if(s) loadProfile(JSON.parse(s)); })();
 
 // ── SUMMARY ────────────────────────────────────────────────
 async function openSum() {
@@ -1008,15 +1061,23 @@ async function send() {
   const ta = document.getElementById('chatTa');
   const text = ta.value.trim();
   if (!text || busy) return;
+  if (!currentMode) { ta.focus(); return; }
   ta.value=''; resize(ta);
   document.getElementById('sendBtn').disabled = true;
   history.push({role:'user', content:text});
   addMsg('user', md(text));
-  busy=true; showTyping();
+  if (!contextSubmitted) {
+    showContextPrompt();
+    document.getElementById('sendBtn').disabled = false;
+    return;
+  }
+  await callNEB();
+}
 
+async function callNEB() {
+  busy=true; showTyping();
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 60000);
-
   try {
     const r = await fetch(RELAY, {
       method:'POST',
@@ -1038,7 +1099,7 @@ async function send() {
     if (!hasRec) { hasRec=true; document.getElementById('sumBar').classList.add('on'); }
   } catch(e) {
     clearTimeout(timeout);
-    history.pop(); hideTyping();
+    hideTyping();
     const isTimeout = e.name === 'AbortError';
     const errMsg = isTimeout
       ? 'The request timed out. The service may be temporarily unavailable.'
@@ -1048,30 +1109,40 @@ async function send() {
   } finally {
     busy=false;
     document.getElementById('sendBtn').disabled = false;
-    ta.focus();
+    document.getElementById('chatTa').focus();
   }
 }
 
-function useStarter(q) {
-  document.getElementById('chatTa').value = q;
-  resize(document.getElementById('chatTa'));
-  send();
-}
+// useStarter removed — mode selection replaces starter prompts
 
 function newConsult() {
   if (history.length && !confirm('Start a new consultation? The current conversation will be cleared.')) return;
-  history=[]; hasRec=false;
+  history=[]; teachingContext={}; currentMode=null; contextSubmitted=false; hasRec=false;
   document.getElementById('sumBar').classList.remove('on');
+  const badge = document.getElementById('modeBadge');
+  badge.className = 'mode-badge';
+  badge.textContent = '';
   document.getElementById('chatInner').innerHTML = `
     <div class="welcome" id="welcome">
-      <div class="wtxt"><h2>Welcome to your New Evidence-Based Teaching and Learning Coach.</h2><p>The NEB TLC is a teaching triage tool for 24/7 faculty guidance on acute pedagogical challenges. The recommendations are evidence-based instructional strategies for post-secondary courses reflecting culturally responsive, inclusive pedagogy and UDL best practices to accommodate learner variability.</p></div>
-      <div class="starters">
-        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm struggling with student engagement in my lectures. Students seem passive and I'm not sure how to get them more actively involved. Can you help?">Students are passive in my lectures — how do I increase active engagement?</button>
-        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I want to improve the quality of feedback I give students on their work, but I'm limited on time. What does the evidence say about effective feedback practices?">How can I give more effective feedback without spending more time?</button>
-        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I teach a large lecture course and I'm concerned some students are being left behind. How can I make my teaching more inclusive for all students?">How do I make my large lecture course more inclusive?</button>
-        <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm redesigning a course and want to make sure my assessments actually measure what I'm teaching. Where should I start with assessment alignment?">How do I align my assessments with what I'm actually teaching?</button>
+      <div class="wtxt">
+        <h2>Welcome to your New Evidence-Based Teaching and Learning Coach.</h2>
+        <p>The NEB TLC is a teaching triage tool for 24/7 faculty guidance on acute pedagogical challenges. The recommendations are evidence-based instructional strategies for post-secondary courses reflecting culturally responsive, inclusive pedagogy and UDL best practices to accommodate learner variability.</p>
+      </div>
+      <div class="mode-intro">
+        <p class="mode-prompt">How would you like to work today?</p>
+        <div class="mode-btns">
+          <button class="mode-btn qf" onclick="selectMode('quickfix')">
+            <div class="mode-btn-title">Quick Fix</div>
+            <div class="mode-btn-desc">Get one targeted, evidence-based strategy fast. Best when you need a solution before your next class.</div>
+          </button>
+          <button class="mode-btn ex" onclick="selectMode('explore')">
+            <div class="mode-btn-title">Explore Solutions</div>
+            <div class="mode-btn-desc">Think through your teaching challenge in depth with a Socratic consultation designed to develop your practice.</div>
+          </button>
+        </div>
       </div>
     </div>`;
+  document.getElementById('chatTa').placeholder = 'Describe your teaching challenge or question…';
 }
 
 function onKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
