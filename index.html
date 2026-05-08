@@ -397,7 +397,7 @@ These six stages are not optional. They must always be followed in order, for ev
 
 1. ACKNOWLEDGE: Acknowledge the challenge with genuine, measured empathy. Keep focus on the person's experience and thinking, not on your own reaction to it.
 2. CLARIFY: Clarify the objective — what does success look like in this specific situation?
-3. GATHER CONTEXT: Use an interview approach to collect the information needed to make meaningful recommendations — course content, teaching modality, class size, time constraints, specific challenge, and desired learning outcomes. Ask focused questions one or two at a time. Do not proceed to Stage 4 until you have gathered sufficient context.
+3. GATHER CONTEXT: Use an interview approach to collect the information needed to make meaningful recommendations — course content, teaching modality, class size, time constraints, specific challenge, and desired learning outcomes. Ask focused questions one or two at a time. You may ask clarifying questions across a maximum of two exchanges. After two exchanges, proceed to Stage 4 with the information gathered. If essential context is still missing, state your assumptions explicitly and offer to refine recommendations if more detail is provided. Do not proceed to Stage 4 until you have completed at least one context-gathering exchange, and do not extend context-gathering beyond two exchanges.
 4. PROPOSE: Offer 3–5 evidence-based strategies informed by the responses gathered, prioritizing LOW EFFORT + HIGH IMPACT first. For EACH strategy, provide the full format below.
 5. CONFIRM: Confirm the preferred next action — which strategy resonates? What will they try first?
 6. SUMMARIZE: Offer to provide a summary. Mention that the Summary button in the toolbar generates a printable consultation summary.
@@ -423,7 +423,7 @@ For EACH strategy in Stage 4, provide ALL of the following in this exact order. 
 [Evidence-informed narrative describing outcomes and mechanisms. Use APA in-text citations (Author, year). Do NOT include raw effect sizes, statistics, or numbers from studies — translate findings into clear descriptive prose.]
 
 **6. Models & Templates**
-[Cite only specific, real resources with verified URLs. BU IETL (https://www.bu.edu/excellence/) first. Then from this approved list only: ASU School of Life Sciences Teaching & Learning Center, ASU Graduate College Center for the Integration of Research Teaching & Learning, Brown University, Carnegie Mellon University Center for Teaching Excellence, Columbia University Center for Teaching & Learning, Cornell University, Duke Center for Academic Innovation, Kennesaw State University, Northwestern University, Penn State Schreyer Institute for Teaching Excellence, Princeton University, Purdue University, University of Michigan Center for Academic Innovation, UCLA, University of Virginia, Vanderbilt Center for Teaching. CRITICAL: Only include a resource if you are certain it exists at that specific URL. If you cannot verify a specific resource exists, omit that institution entirely. Never fabricate, approximate, or suggest vague resource categories such as "see examples from writing centers." Never cite any institution not on this list.]
+[Cite only specific, real resources with complete and verified URLs. Every resource listed must include its full URL — if you cannot provide a complete, accurate, and functional URL for a specific resource, omit that resource entirely. No institution name only, no partial links, no approximate URLs, no "see their website." BU IETL (https://www.bu.edu/excellence/) first. Then from this approved list only: ASU School of Life Sciences Teaching & Learning Center, ASU Graduate College Center for the Integration of Research Teaching & Learning, Brown University, Carnegie Mellon University Center for Teaching Excellence, Columbia University Center for Teaching & Learning, Cornell University, Duke Center for Academic Innovation, Kennesaw State University, Northwestern University, Penn State Schreyer Institute for Teaching Excellence, Princeton University, Purdue University, University of Michigan Center for Academic Innovation, UCLA, University of Virginia, Vanderbilt Center for Teaching. CRITICAL: Only include a resource if you are certain it exists at that specific URL. If you cannot verify a specific resource exists, omit that institution entirely. Never fabricate, approximate, or suggest vague resource categories. Never cite any institution not on this list.]
 
 **7. Technology Support**
 [Optional tools — start with low-barrier, free options. Indicate clearly if technology is not required.]
@@ -706,8 +706,9 @@ All major knowledge areas are now active. When a query falls outside these areas
 - NEVER include raw effect sizes, statistics, or numerical study results in recommendations or citations — present evidence as descriptive prose only
 - NEVER cite or link to bu.edu/ctl — it is defunct. Use https://www.bu.edu/excellence/ for BU IETL resources
 - NEVER cite or link to any institution or website not explicitly listed in the approved source list
-- NEVER fabricate, approximate, or vaguely gesture toward a CTL resource — if you cannot verify a specific resource exists at a specific URL, omit it entirely
-- NEVER suggest vague resource categories ("see writing centers," "consult composition programs") — cite a specific verified resource or say nothing
+- NEVER fabricate, approximate, or vaguely gesture toward a CTL resource — if you cannot verify a specific resource exists at a specific complete URL, omit it entirely
+- NEVER list a CTL resource without its full, verified URL — a resource without a confirmed URL must be omitted
+- NEVER suggest vague resource categories ("see writing centers," "consult composition programs") — cite a specific verified resource with a full URL or say nothing
 - NEVER include a DOI unless you are certain it is correct — omit the DOI entirely if there is any uncertainty
 - NEVER cite conference proceedings, white papers, or practitioner reports for sources outside the knowledge base — peer-reviewed journals and books/book chapters from established academic publishers only, and only if highly cited and well-established
 - NEVER use non-English characters, words, or scripts in any response
@@ -845,63 +846,70 @@ async function openSum() {
 }
 function closeSum() { document.getElementById('sumOv').classList.add('hidden'); }
 function printSum() {
-  const txt = document.getElementById('sumContent').textContent;
+  const txt = document.getElementById('sumContent').textContent.trim();
+  if (!txt || txt === 'Your summary will appear here.' || txt.startsWith('Summary could not')) {
+    alert('Please generate a summary first.');
+    return;
+  }
   const now = new Date();
   const mm = String(now.getMonth()+1).padStart(2,'0');
   const dd = String(now.getDate()).padStart(2,'0');
   const yyyy = now.getFullYear();
   const dateStamp = mm+'-'+dd+'-'+yyyy;
-  const w = window.open('','_blank');
   const lines = txt.split('\n');
-  let html = '';
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const esc = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    if (line.startsWith('FACULTY CONSULTATION SUMMARY')) {
-      html += `<h1>${esc}</h1>`;
+  let body = '';
+  lines.forEach(function(line) {
+    const e = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if (!line.trim()) {
+      body += '<div class="sp"></div>';
+    } else if (line.startsWith('FACULTY CONSULTATION SUMMARY')) {
+      body += '<h1>'+e+'</h1>';
     } else if (line.startsWith('NEB TLC')) {
-      html += `<p class="subtitle">${esc}</p>`;
+      body += '<p class="sub">'+e+'</p>';
     } else if (line.startsWith('Institute for') || line.startsWith('https://') || line.startsWith('excellence@') || line.startsWith('DATE:')) {
-      html += `<p class="meta">${esc}</p>`;
+      body += '<p class="meta">'+e+'</p>';
     } else if (/^-{3,}$/.test(line.trim())) {
-      html += `<hr>`;
+      body += '<hr>';
     } else if (/^SECTION \d+:/.test(line)) {
-      html += `<h2>${esc}</h2>`;
+      body += '<h2>'+e+'</h2>';
     } else if (/^STRATEGY:/.test(line)) {
-      html += `<div class="strategy-header">${esc}</div>`;
-    } else if (/^\d+\.\s+[A-Za-z]/.test(line) || line.trim() === 'References') {
-      html += `<h4>${esc}</h4>`;
-    } else if (line.trim() === '') {
-      html += `<div class="spacer"></div>`;
+      body += '<div class="strat">'+e+'</div>';
+    } else if (/^\d+\.\s+[A-Za-z]/.test(line) || line.trim() === 'References' || line.trim() === 'ALL REFERENCES') {
+      body += '<h4>'+e+'</h4>';
     } else {
-      html += `<p>${esc}</p>`;
+      body += '<p>'+e+'</p>';
     }
-  }
-  w.document.write(`<!DOCTYPE html>
-<html><head>
-<title>NEB-TLC-Summary-${dateStamp}</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  @page { margin: 1in; size: letter; }
-  body { font-family: 'DM Sans', sans-serif; font-size: 12pt; color: #1E2A36; line-height: 1.7; max-width: 720px; margin: 0 auto; }
-  h1 { font-size: 18pt; font-weight: 700; color: #17375E; margin: 0 0 5px 0; }
-  .subtitle { font-size: 11pt; color: #17375E; font-weight: 500; margin: 0 0 3px 0; }
-  .meta { font-size: 10pt; color: #606B76; margin: 0 0 2px 0; }
-  hr { border: none; border-top: 2px solid #CC0000; margin: 18px 0; }
-  h2 { font-size: 13pt; font-weight: 700; color: #17375E; border-left: 4px solid #CC0000; padding-left: 10px; margin: 28px 0 10px 0; }
-  .strategy-header { font-size: 14pt; font-weight: 700; color: #fff; background: #17375E; padding: 10px 14px; border-radius: 4px; margin: 24px 0 12px 0; letter-spacing: .01em; }
-  h4 { font-size: 11pt; font-weight: 600; color: #1E4A7A; margin: 14px 0 4px 0; border-bottom: 1px solid #E2E5E9; padding-bottom: 3px; }
-  p { margin: 0 0 8px 0; font-size: 12pt; }
-  .spacer { height: 8px; }
-  @media print {
-    body { font-size: 11.5pt; }
-    .strategy-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    a { color: #17375E; text-decoration: none; }
-  }
-</style>
-</head><body>${html}</body></html>`);
-  w.document.close();
-  w.print();
+  });
+  const css = [
+    '*{box-sizing:border-box;margin:0;padding:0}',
+    '@page{margin:1in;size:letter}',
+    'body{font-family:"DM Sans",Arial,sans-serif;font-size:12pt;color:#1E2A36;line-height:1.72;max-width:720px;margin:0 auto;padding:28px 0}',
+    '.pbtn{display:block;margin:0 auto 28px;padding:10px 28px;background:#CC0000;color:#fff;border:none;border-radius:5px;font-family:inherit;font-size:11pt;font-weight:600;cursor:pointer}',
+    'h1{font-size:20pt;font-weight:700;color:#17375E;margin:0 0 6px}',
+    '.sub{font-size:11pt;color:#17375E;font-weight:500;margin:0 0 3px}',
+    '.meta{font-size:10pt;color:#606B76;margin:0 0 2px}',
+    'hr{border:none;border-top:2.5px solid #CC0000;margin:20px 0}',
+    'h2{font-size:13.5pt;font-weight:700;color:#17375E;border-left:4px solid #CC0000;padding-left:11px;margin:30px 0 10px}',
+    '.strat{font-size:15pt;font-weight:700;color:#fff;background:#17375E;padding:11px 16px;border-radius:5px;margin:28px 0 14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}',
+    'h4{font-size:11.5pt;font-weight:600;color:#1E4A7A;margin:16px 0 5px;border-bottom:1px solid #C8D8EA;padding-bottom:4px}',
+    'p{font-size:12pt;margin:0 0 9px}',
+    '.sp{height:10px}',
+    '@media print{.pbtn{display:none}body{padding:0}}'
+  ].join('');
+  const fullHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
+    + '<title>NEB-TLC-Summary-'+dateStamp+'</title>'
+    + '<link rel="preconnect" href="https://fonts.googleapis.com">'
+    + '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">'
+    + '<style>'+css+'</style></head><body>'
+    + '<button class="pbtn" onclick="window.print()">Print / Save as PDF</button>'
+    + body
+    + '<script>window.addEventListener("load",function(){setTimeout(function(){window.print();},700);});<\/script>'
+    + '</body></html>';
+  const blob = new Blob([fullHtml], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, '_blank');
+  if (!w) { alert('Please allow pop-ups for this site, then click Print / Save PDF again.'); }
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
 }
 
 // ── CHAT ───────────────────────────────────────────────────
