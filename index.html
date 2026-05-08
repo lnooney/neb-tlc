@@ -273,11 +273,18 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
           <h2>Welcome to your New Evidence-Based Teaching and Learning Coach.</h2>
           <p>The NEB TLC is a teaching triage tool for 24/7 faculty guidance on acute pedagogical challenges. The recommendations are evidence-based instructional strategies for post-secondary courses reflecting culturally responsive, inclusive pedagogy and UDL best practices to accommodate learner variability.</p>
         </div>
-        <div class="starters">
-          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm struggling with student engagement in my lectures. Students seem passive and I'm not sure how to get them more actively involved. Can you help?">Students are passive in my lectures — how do I increase active engagement?</button>
-          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I want to improve the quality of feedback I give students on their work, but I'm limited on time. What does the evidence say about effective feedback practices?">How can I give more effective feedback without spending more time?</button>
-          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I teach a large lecture course and I'm concerned some students are being left behind. How can I make my teaching more inclusive for all students?">How do I make my large lecture course more inclusive?</button>
-          <button class="starter" onclick="useStarter(this.dataset.q)" data-q="I'm redesigning a course and want to make sure my assessments actually measure what I'm teaching. Where should I start with assessment alignment?">How do I align my assessments with what I'm actually teaching?</button>
+        <div class="mode-intro">
+          <p class="mode-prompt">How would you like to work today?</p>
+          <div class="mode-btns">
+            <button class="mode-btn qf" onclick="selectMode('quickfix')">
+              <div class="mode-btn-title">Quick Fix</div>
+              <div class="mode-btn-desc">Get one targeted, evidence-based strategy fast. Best when you need a solution before your next class.</div>
+            </button>
+            <button class="mode-btn ex" onclick="selectMode('explore')">
+              <div class="mode-btn-title">Explore Solutions</div>
+              <div class="mode-btn-desc">Think through your teaching challenge in depth with a Socratic consultation designed to develop your practice.</div>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1061,7 +1068,11 @@ async function send() {
   const ta = document.getElementById('chatTa');
   const text = ta.value.trim();
   if (!text || busy) return;
-  if (!currentMode) { ta.focus(); return; }
+  if (!currentMode) {
+    addMsg('ai','<p>Please select <strong>Quick Fix</strong> or <strong>Explore Solutions</strong> above to begin your consultation.</p>');
+    document.getElementById('sendBtn').disabled = false;
+    return;
+  }
   ta.value=''; resize(ta);
   document.getElementById('sendBtn').disabled = true;
   history.push({role:'user', content:text});
