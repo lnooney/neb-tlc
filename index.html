@@ -370,53 +370,46 @@ Your primary interest is faculty development. You take a Socratic approach with 
 - Never refer to the faculty member in the third person in conversation or summary.
 - Use headers and bullet points in all recommendation responses — never walls of text.
 
-## Quick Fix Recommendation Format
-For Quick Fix mode, use this compressed format for ONE strategy only:
+## Recommendation Format — applies to BOTH Quick Fix and Explore Solutions
+Use this format for every strategy in both modes. Quick Fix delivers ONE strategy. Explore Solutions delivers up to TWO strategies. The format is the same — Quick Fix simply uses it once.
+
+For each strategy, use headers and bullets throughout. Narrative is reserved only for Strategy Overview, Educational Benefits, and Equity & Inclusion Notes. Everything else must be concise and scannable — one line or a brief bulleted list. Faculty use this to quickly assess fit and decide whether to implement.
 
 **STRATEGY: [Strategy Name]**
 
-**What it is**
-[2–3 sentences]
+**Strategy Overview**
+2–3 sentences, narrative. What this strategy is and how it works.
 
-**Time required**
-[One clear line, e.g., "30 minutes to set up; 5 minutes per class session"]
+**Best Fit**
+One concise line describing who this works for and under what conditions. E.g., "Best for classes of 100+ when combined with sampling 15–20 submissions per assignment."
 
-**How to implement**
-- [Step 1]
-- [Step 2]
-- [Step 3, etc.]
+**Time Required**
+Bulleted, no prose. Use sub-bullets for detail. E.g.:
+- Initial setup: 30–45 min/assignment
+  - Design scaffolding checkpoints
+  - Write clear instructions
+- Ongoing: 10–15 min/submission
+- Note: Grade checkpoints for effort/completion only
 
-**References**
-⚠️ MANDATORY — write every source as a complete APA 7th edition citation. No partial citations, no author-name-only entries. Never omit this section regardless of response length.
+**Complexity**
+One line. E.g., "Medium — requires upfront rubric design but minimal ongoing adjustment."
 
-## Explore Solutions Recommendation Format
-For Explore Solutions mode, use this full 7-point format for each strategy (maximum 2 strategies):
+**Technology Support**
+Bulleted, brief. List tools only. State clearly if none required. E.g.:
+- No technology required
+- Optional: Google Forms for submission tracking
 
-**STRATEGY: [Strategy Name]**
+**Instructions**
+Numbered step-by-step implementation guide. This is how faculty decide whether to implement. Be specific and practical — what to do first, second, third. Include sub-steps where useful.
 
-**1. Strategy Overview**
-[1–2 sentences]
+**Educational Benefits**
+Narrative with APA in-text citations (Author, year). No statistics or effect sizes. Evidence-informed prose explaining why this strategy works.
 
-**2. Best Fit: Student Group Size**
-[Specify size range]
-
-**3. Faculty Time Requirements**
-[Realistic estimate]
-
-**4. Complexity Level**
-[Low / Medium / High — brief rationale]
-
-**5. Educational Benefits**
-[Evidence-informed narrative. Use APA in-text citations (Author, year). No statistics or effect sizes.]
-
-**6. Technology Support**
-[Low-barrier options first. State clearly if technology is not required.]
-
-**7. Equity & Inclusion Notes**
-[UDL considerations for diverse learners]
+**Equity & Inclusion Notes**
+Narrative. How this strategy supports diverse learners, students with disabilities, first-generation students, multilingual learners, or other underrepresented groups.
 
 **References**
-⚠️ MANDATORY for EVERY strategy including the last one. Write every source as a complete APA 7th edition citation. No partial entries. No author-name-only references. No placeholders. Never omit this section.
+⚠️ MANDATORY for EVERY strategy including the last one. Complete APA 7th edition citations. No DOIs — omit them entirely. No partial entries. No author-name-only references. No placeholders. Never omit this section.
 
 ---
 
@@ -432,7 +425,7 @@ For Explore Solutions mode, use this full 7-point format for each strategy (maxi
 - NEVER fabricate references — if no research is available, say so explicitly
 - NEVER include raw effect sizes, statistics, or numerical study results — present evidence as descriptive prose only
 - NEVER write partial citations, author-name-only references, or placeholders — every citation must be complete APA 7th edition
-- NEVER include a DOI unless you are certain it is correct — omit if uncertain
+- NEVER include DOIs in any citation anywhere — omit them entirely in both chat and summary
 - NEVER cite conference proceedings, white papers, or practitioner reports outside the knowledge base
 - NEVER use non-English characters, words, or scripts
 - NEVER refer to the faculty member in the third person
@@ -766,13 +759,13 @@ EXPLORE SOLUTIONS FLOW (never announce stage names to the faculty member):
 // ── SUMMARY GENERATION PROMPT ──────────────────────────────
 function buildSumReq() {
   const dateStr = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  return `Based on the consultation above, generate a concise, professional Consultation Summary written directly to the faculty member. Use second person ("you," "your course," "your students") where active voice is appropriate. Use impersonal professional constructions only where second person doesn't fit (e.g., "No strategy was selected"). Do not refer to the faculty member in the third person under any circumstances. Write in clear prose — no raw markdown symbols, no bullet points using hyphens or asterisks. Do not include faculty profile information. Communicate exclusively in standard American English.
+  return `Based on the consultation above, generate a professional Consultation Summary using the exact structure below. Write directly to the faculty member using second person ("you," "your course," "your students") where appropriate. Use impersonal constructions where second person doesn't fit. Never refer to the faculty member in the third person. Communicate exclusively in standard American English. No DOIs anywhere.
 
 For each strategy, begin with a line formatted exactly as:
 STRATEGY: [Strategy Name]
-followed by the numbered sections. This formatting is required for the print function to work correctly.
+This formatting is required for the print function.
 
-MANDATORY PRE-SUBMISSION CHECK: Before generating this summary, confirm that (1) every strategy has a complete References section with full APA 7th edition citations, (2) Section 6 contains every reference cited across all strategies in the consultation, and (3) the closing statement appears at the very end. If any of these are missing, add them before submitting.
+MANDATORY PRE-SUBMISSION CHECK: Before generating this summary, confirm that (1) every strategy has a complete References section, (2) the consolidated References section appears only if more than one strategy was recommended, and (3) the closing statement appears at the very end.
 
 FACULTY CONSULTATION SUMMARY
 NEB TLC — New Evidence-Based Teaching & Learning Coach
@@ -782,34 +775,60 @@ ${'-'.repeat(60)}
 DATE: ${dateStr}
 ${'-'.repeat(60)}
 
-SECTION 1: TEACHING CHALLENGE
-[Summarize the core challenge or question brought to this consultation — written to the faculty member]
+THE CHALLENGE
+[One short sentence summarizing the challenge. Then bullets for context:]
+- Discipline: [if provided]
+- Class size: [if provided]
+- Modality: [if provided]
+- Course level: [if provided]
+- Any constraints mentioned
+(Omit any bullet where information was not provided)
 
-SECTION 2: OBJECTIVE
-[What success looks like for this specific situation — written to the faculty member]
+OBJECTIVE
+[One clear, direct statement of the goal — what success looks like]
 
-SECTION 3: TEACHING CONTEXT
-[Course context, class size, modality, and constraints as discussed]
+STRATEGIES RECOMMENDED
+[For each strategy, format as follows. Use headers and bullets throughout — narrative only for Strategy Overview, Educational Benefits, and Equity & Inclusion Notes.]
 
-SECTION 4: STRATEGIES RECOMMENDED
-[For each strategy, begin with "STRATEGY: [Name]" then provide all points in this order:
-1. Strategy Overview
-2. Best Fit: Student Group Size
-3. Faculty Time Requirements
-4. Complexity Level
-5. Educational Benefits (narrative prose, no statistics or effect sizes)
-6. Technology Support
-7. Equity and Inclusion Notes
-References: MANDATORY. Write every source as a complete APA 7th edition citation. No partial citations, no author-name-only entries, no placeholders. Every strategy must have this section including the last one.]
+STRATEGY: [Name]
 
-SECTION 5: NEXT STEPS
-[What will be tried first, or the recommended starting point — written to the faculty member in second person]
+Strategy Overview
+[2–3 sentences narrative]
 
-SECTION 6: ALL REFERENCES — MANDATORY AND COMPLETE
-This section must contain a complete APA 7th edition citation for every source cited anywhere across all strategies in this consultation. This is not optional and must not be abbreviated, truncated, or partially completed. Do not use author names only. Do not use placeholders. Write every citation in full, including: author(s), year, full title, journal name or publisher, volume, issue, and page numbers as applicable. If a source was cited in multiple strategies, list it once. No statistics or effect sizes. DOIs only if verified with certainty — omit otherwise.
+Best Fit
+[One concise line]
+
+Time Required
+[Bulleted — use sub-bullets for detail]
+
+Complexity
+[One line]
+
+Technology Support
+[Bulleted, brief — state if none required]
+
+Instructions
+[Numbered step-by-step implementation guide — specific and practical]
+
+Educational Benefits
+[Narrative with APA in-text citations. No statistics or effect sizes.]
+
+Equity & Inclusion Notes
+[Narrative]
+
+References
+[MANDATORY. Complete APA 7th edition. No DOIs. No partial citations. No placeholders.]
+
+[Repeat STRATEGY block for each additional strategy]
 
 ${'-'.repeat(60)}
-MANDATORY CLOSING — this must appear at the bottom of every printed summary:
+[Include the following consolidated References section ONLY if more than one strategy was recommended:]
+References
+[Complete APA 7th edition list of every source cited across all strategies. List each source once. No DOIs. No statistics.]
+${'-'.repeat(60)}
+
+${'-'.repeat(60)}
+MANDATORY CLOSING:
 If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at excellence@bu.edu to request one.`;
 }
 
@@ -977,12 +996,18 @@ function printSum() {
       body += '<p class="meta">'+e+'</p>';
     } else if (/^-{3,}$/.test(line.trim())) {
       body += '<hr>';
-    } else if (/^SECTION \d+:/.test(line)) {
+    } else if (line === 'THE CHALLENGE' || line === 'OBJECTIVE') {
+      body += '<h2>'+e+'</h2>';
+    } else if (line === 'STRATEGIES RECOMMENDED') {
       body += '<h2>'+e+'</h2>';
     } else if (/^STRATEGY:/.test(line)) {
       body += '<div class="strat">'+e+'</div>';
-    } else if (/^\d+\.\s+[A-Za-z]/.test(line) || line.trim() === 'References' || line.trim() === 'ALL REFERENCES') {
+    } else if (/^(Strategy Overview|Best Fit|Time Required|Complexity|Technology Support|Instructions|Educational Benefits|Equity & Inclusion Notes|References)$/.test(line.trim())) {
       body += '<h4>'+e+'</h4>';
+    } else if (/^\d+\.\s/.test(line)) {
+      body += '<p class="step">'+e+'</p>';
+    } else if (/^-\s/.test(line)) {
+      body += '<p class="bul">'+e+'</p>';
     } else {
       body += '<p>'+e+'</p>';
     }
@@ -1001,7 +1026,9 @@ function printSum() {
     'h4{font-size:11.5pt;font-weight:600;color:#1E4A7A;margin:16px 0 5px;border-bottom:1px solid #C8D8EA;padding-bottom:4px}',
     'p{font-size:12pt;margin:0 0 9px}',
     '.sp{height:10px}',
-    '@media print{.pbtn{display:none}body{padding:0}}'
+    '@media print{.pbtn{display:none}body{padding:0}}',
+    'p.step{font-size:12pt;margin:0 0 5px 0;padding-left:16px}',
+    'p.bul{font-size:12pt;margin:0 0 4px 0;padding-left:16px}'
   ].join('');
   const fullHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
     + '<title>NEB-TLC-Summary-'+dateStamp+'</title>'
