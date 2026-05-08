@@ -158,12 +158,37 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 .send-btn svg{width:18px;height:18px}
 .ihint{font-size:.69rem;color:var(--gray-400);margin-top:6px;text-align:right}
 
-/* PROFILE FORM */
-.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
-@media(max-width:500px){.pgrid{grid-template-columns:1fr}}
+/* SELECT SHARED STYLE */
 .fg label{display:block;font-size:.7rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--navy);margin-bottom:5px}
 .fg select{width:100%;padding:9px 28px 9px 11px;border:1.5px solid var(--gray-200);border-radius:var(--r-sm);font-family:var(--font);font-size:.87rem;color:var(--gray-800);background:var(--white);cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right 9px center;background-repeat:no-repeat;background-size:15px;transition:border-color .14s}
 .fg select:focus{outline:none;border-color:var(--navy)}
+
+/* MODE SELECTION */
+.mode-intro{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:540px}
+.mode-prompt{font-size:.9rem;font-weight:600;color:var(--gray-600);margin:0;text-align:center;letter-spacing:.01em}
+.mode-btns{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+@media(max-width:480px){.mode-btns{grid-template-columns:1fr}}
+.mode-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.mode-btn{width:100%;padding:14px 20px;border:none;border-radius:var(--r);font-family:var(--font);font-size:1rem;font-weight:700;color:#fff;cursor:pointer;transition:all .14s;box-shadow:var(--shadow-sm);letter-spacing:.01em;text-align:center}
+.mode-btn.qf{background:var(--scarlet)}
+.mode-btn.qf:hover{background:var(--scarlet-hover);transform:translateY(-2px);box-shadow:0 4px 14px rgba(204,0,0,.3)}
+.mode-btn.ex{background:var(--navy)}
+.mode-btn.ex:hover{background:#0f2540;transform:translateY(-2px);box-shadow:0 4px 14px rgba(23,55,94,.35)}
+.mode-btn-desc{font-size:.8rem;color:var(--gray-600);line-height:1.5;padding:0 2px}
+
+/* MODE BADGE */
+.mode-badge{display:none;align-items:center;padding:4px 11px;border-radius:20px;font-size:.71rem;font-weight:600;letter-spacing:.04em;white-space:nowrap}
+.mode-badge.on{display:inline-flex}
+.mode-badge.qf{background:#FDF0F0;color:var(--scarlet);border:1px solid #F5C6C6}
+.mode-badge.ex{background:var(--navy-light);color:var(--navy);border:1px solid var(--navy-border)}
+
+/* TEACHING CONTEXT WIDGET */
+.ctx-widget{background:var(--navy-light);border:1.5px solid var(--navy-border);border-radius:var(--r);padding:16px 18px}
+.ctx-widget h4{font-size:.75rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.07em;margin:0 0 13px}
+.ctx-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:500px){.ctx-grid{grid-template-columns:1fr}}
+.ctx-submit{background:var(--scarlet);color:#fff;border:none;border-radius:var(--r-sm);padding:9px 22px;font-family:var(--font);font-size:.86rem;font-weight:600;cursor:pointer;transition:background .14s}
+.ctx-submit:hover{background:var(--scarlet-hover)}
 
 /* SUMMARY */
 .sum-wrap{background:var(--surface);border:1px solid var(--gray-200);border-radius:var(--r);padding:18px;font-size:.84rem;line-height:1.72;white-space:pre-wrap;max-height:400px;overflow-y:auto;color:var(--gray-800);word-break:break-word}
@@ -276,14 +301,14 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
         <div class="mode-intro">
           <p class="mode-prompt">How would you like to work today?</p>
           <div class="mode-btns">
-            <button class="mode-btn qf" onclick="selectMode('quickfix')">
-              <div class="mode-btn-title">Quick Fix</div>
-              <div class="mode-btn-desc">Get one targeted, evidence-based strategy fast. Best when you need a solution before your next class.</div>
-            </button>
-            <button class="mode-btn ex" onclick="selectMode('explore')">
-              <div class="mode-btn-title">Explore Solutions</div>
-              <div class="mode-btn-desc">Think through your teaching challenge in depth with a Socratic consultation designed to develop your practice.</div>
-            </button>
+            <div class="mode-card">
+              <button class="mode-btn qf" onclick="selectMode('quickfix')">Quick Fix</button>
+              <p class="mode-btn-desc">Get one targeted, evidence-based strategy fast. Best when you need a solution before your next class.</p>
+            </div>
+            <div class="mode-card">
+              <button class="mode-btn ex" onclick="selectMode('explore')">Explore Solutions</button>
+              <p class="mode-btn-desc">Think through your teaching challenge in depth with a Socratic consultation designed to develop your practice.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -1142,14 +1167,14 @@ function newConsult() {
       <div class="mode-intro">
         <p class="mode-prompt">How would you like to work today?</p>
         <div class="mode-btns">
-          <button class="mode-btn qf" onclick="selectMode('quickfix')">
-            <div class="mode-btn-title">Quick Fix</div>
-            <div class="mode-btn-desc">Get one targeted, evidence-based strategy fast. Best when you need a solution before your next class.</div>
-          </button>
-          <button class="mode-btn ex" onclick="selectMode('explore')">
-            <div class="mode-btn-title">Explore Solutions</div>
-            <div class="mode-btn-desc">Think through your teaching challenge in depth with a Socratic consultation designed to develop your practice.</div>
-          </button>
+          <div class="mode-card">
+              <button class="mode-btn qf" onclick="selectMode('quickfix')">Quick Fix</button>
+              <p class="mode-btn-desc">Get one targeted, evidence-based strategy fast. Best when you need a solution before your next class.</p>
+            </div>
+            <div class="mode-card">
+              <button class="mode-btn ex" onclick="selectMode('explore')">Explore Solutions</button>
+              <p class="mode-btn-desc">Think through your teaching challenge in depth with a Socratic consultation designed to develop your practice.</p>
+            </div>
         </div>
       </div>
     </div>`;
