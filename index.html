@@ -270,12 +270,20 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
       <h2>Consultation Summary</h2>
     </div>
     <div class="mbd" style="padding-bottom:14px">
-      <p id="sumMsg" style="color:var(--gray-500);font-style:italic;font-size:.83rem;margin-bottom:10px;display:none">Generating your consultation summary — this may take a moment…</p>
+      <div id="sumLoading" style="display:none;text-align:center;padding:28px 0 20px">
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px">
+          <div style="width:11px;height:11px;background:var(--scarlet);border-radius:50%;animation:dotB 1.3s infinite"></div>
+          <div style="width:11px;height:11px;background:var(--scarlet);border-radius:50%;animation:dotB 1.3s infinite .18s"></div>
+          <div style="width:11px;height:11px;background:var(--scarlet);border-radius:50%;animation:dotB 1.3s infinite .36s"></div>
+        </div>
+        <p style="font-size:.92rem;font-weight:500;color:var(--navy);margin:0 0 4px">Generating your consultation summary…</p>
+        <p style="font-size:.8rem;color:var(--gray-500);margin:0">This may take up to a minute. Please wait.</p>
+      </div>
       <div class="sum-wrap" id="sumContent">Your summary will appear here.</div>
     </div>
     <div class="mft">
       <button class="btn btn-ghost" onclick="closeSum()">Close</button>
-      <button class="btn btn-red btn-sm" onclick="printSum()">
+      <button class="btn btn-red btn-sm" id="printBtn" onclick="printSum()" disabled style="opacity:.45;cursor:not-allowed">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"/></svg>
         Print / Save PDF
       </button>
@@ -423,7 +431,7 @@ For EACH strategy in Stage 4, provide ALL of the following in this exact order. 
 [Evidence-informed narrative describing outcomes and mechanisms. Use APA in-text citations (Author, year). Do NOT include raw effect sizes, statistics, or numbers from studies — translate findings into clear descriptive prose.]
 
 **6. Models & Templates**
-[Cite only specific, real resources with complete and verified URLs. Every resource listed must include its full URL — if you cannot provide a complete, accurate, and functional URL for a specific resource, omit that resource entirely. No institution name only, no partial links, no approximate URLs, no "see their website." BU IETL (https://www.bu.edu/excellence/) first. Then from this approved list only: ASU School of Life Sciences Teaching & Learning Center, ASU Graduate College Center for the Integration of Research Teaching & Learning, Brown University, Carnegie Mellon University Center for Teaching Excellence, Columbia University Center for Teaching & Learning, Cornell University, Duke Center for Academic Innovation, Kennesaw State University, Northwestern University, Penn State Schreyer Institute for Teaching Excellence, Princeton University, Purdue University, University of Michigan Center for Academic Innovation, UCLA, University of Virginia, Vanderbilt Center for Teaching. CRITICAL: Only include a resource if you are certain it exists at that specific URL. If you cannot verify a specific resource exists, omit that institution entirely. Never fabricate, approximate, or suggest vague resource categories. Never cite any institution not on this list.]
+[Cite only specific, real resources with complete and verified URLs. Every resource listed must include its full, direct URL linking to the exact page where the resource can be found — not a CTL homepage, not a general resources or landing page, not a search results page. If the only available URL is a homepage or general landing page, that resource must be omitted. If you cannot provide a direct URL to the specific resource, omit that resource entirely. No institution name only, no partial links, no approximate URLs, no "see their website." BU IETL (https://www.bu.edu/excellence/) first. Then from this approved list only: ASU School of Life Sciences Teaching & Learning Center, ASU Graduate College Center for the Integration of Research Teaching & Learning, Brown University, Carnegie Mellon University Center for Teaching Excellence, Columbia University Center for Teaching & Learning, Cornell University, Duke Center for Academic Innovation, Kennesaw State University, Northwestern University, Penn State Schreyer Institute for Teaching Excellence, Princeton University, Purdue University, University of Michigan Center for Academic Innovation, UCLA, University of Virginia, Vanderbilt Center for Teaching. CRITICAL: Only include a resource if you are certain it exists at that specific direct URL. If you cannot verify, omit. Never fabricate, approximate, or suggest vague resource categories. Never cite any institution not on this list.]
 
 **7. Technology Support**
 [Optional tools — start with low-barrier, free options. Indicate clearly if technology is not required.]
@@ -432,7 +440,7 @@ For EACH strategy in Stage 4, provide ALL of the following in this exact order. 
 [UDL considerations: how this supports diverse learners, students with disabilities, first-generation students, multilingual learners, or other underrepresented groups]
 
 **References**
-[Mandatory. List every source cited in this strategy in APA 7th format. Sources must be from the knowledge base, peer-reviewed journals, or books and book chapters from established academic publishers that are highly cited and well-established in the field. Do not cite conference proceedings, white papers, or practitioner reports. Do not include effect sizes or statistics. Only include a DOI if you can confirm with certainty it is correct — omit the DOI entirely if there is any uncertainty. Never fabricate references.]
+[MANDATORY — this section must appear for EVERY strategy, including the last one. Never omit the References section regardless of how many strategies have been presented or where this strategy falls in the response. Write out every source cited in this strategy as a complete APA 7th edition citation. Do not use author names only, do not abbreviate, do not use placeholders. Every citation must include all required APA elements: author(s), year, title, journal/publisher, volume/issue/pages as applicable. Sources must be from the knowledge base, peer-reviewed journals, or books and book chapters from established academic publishers that are highly cited and well-established in the field. Do not cite conference proceedings, white papers, or practitioner reports. Do not include effect sizes or statistics. Only include a DOI if you can confirm with certainty it is correct — omit the DOI entirely if there is any uncertainty. Never fabricate references.]
 
 ---
 
@@ -707,8 +715,10 @@ All major knowledge areas are now active. When a query falls outside these areas
 - NEVER cite or link to bu.edu/ctl — it is defunct. Use https://www.bu.edu/excellence/ for BU IETL resources
 - NEVER cite or link to any institution or website not explicitly listed in the approved source list
 - NEVER fabricate, approximate, or vaguely gesture toward a CTL resource — if you cannot verify a specific resource exists at a specific complete URL, omit it entirely
-- NEVER list a CTL resource without its full, verified URL — a resource without a confirmed URL must be omitted
-- NEVER suggest vague resource categories ("see writing centers," "consult composition programs") — cite a specific verified resource with a full URL or say nothing
+- NEVER list a CTL resource without its full, verified, direct URL linking to the specific resource page — homepage and landing page URLs are not acceptable substitutes and must not be used
+- NEVER suggest vague resource categories ("see writing centers," "consult composition programs") — cite a specific verified resource with a full direct URL or say nothing
+- ALWAYS include a complete References section for EVERY strategy — including the last strategy in a response. This is non-negotiable. Never omit, truncate, or abbreviate references under any circumstances.
+- NEVER write partial citations, author-name-only references, or placeholder references — every citation must be complete APA 7th edition format
 - NEVER include a DOI unless you are certain it is correct — omit the DOI entirely if there is any uncertainty
 - NEVER cite conference proceedings, white papers, or practitioner reports for sources outside the knowledge base — peer-reviewed journals and books/book chapters from established academic publishers only, and only if highly cited and well-established
 - NEVER use non-English characters, words, or scripts in any response
@@ -767,7 +777,7 @@ SECTION 5: NEXT STEPS
 [What will be tried first, or the recommended starting point]
 
 SECTION 6: ALL REFERENCES
-[Every reference cited during the consultation, APA 7th edition, no statistics or effect sizes, DOIs only if verified]
+[CRITICAL: This section must contain a complete APA 7th edition citation for every source cited anywhere in this consultation. Do not abbreviate, do not use author names only, do not use placeholders, do not truncate. Write out every citation in full. If a source was cited in multiple strategies, list it once. Every citation must include all required APA elements: author(s), year, title, journal or publisher, volume, issue, and page numbers as applicable. No statistics or effect sizes. DOIs only if verified with certainty.]
 
 ${'-'.repeat(60)}
 If you would like additional support on this challenge, or need to address broader curricular design questions, the Teaching and Learning Innovation team within the Institute for Excellence in Teaching & Learning is available for individual consultations. Reach out at excellence@bu.edu to request one.`;
@@ -815,10 +825,15 @@ function loadProfile(p) {
 async function openSum() {
   if (!history.length) { alert('Start a consultation first — your summary will be available after NEB TLC provides recommendations.'); return; }
   document.getElementById('sumOv').classList.remove('hidden');
-  const msg = document.getElementById('sumMsg');
+  const loading = document.getElementById('sumLoading');
   const content = document.getElementById('sumContent');
-  msg.style.display = 'block';
+  const printBtn = document.getElementById('printBtn');
+  loading.style.display = 'block';
+  content.style.display = 'none';
   content.textContent = '';
+  printBtn.disabled = true;
+  printBtn.style.opacity = '.45';
+  printBtn.style.cursor = 'not-allowed';
   try {
     const sumController = new AbortController();
     const sumTimeout = setTimeout(() => sumController.abort(), 90000);
@@ -837,11 +852,15 @@ async function openSum() {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
     content.textContent = d.content?.[0]?.text || 'Summary generation failed — please try again.';
+    printBtn.disabled = false;
+    printBtn.style.opacity = '1';
+    printBtn.style.cursor = 'pointer';
   } catch(e) {
     console.error('NEB TLC summary error:', e);
     content.textContent = 'Summary could not be generated (' + (e.message || 'network error') + '). Please try again or contact excellence@bu.edu.';
   } finally {
-    msg.style.display = 'none';
+    loading.style.display = 'none';
+    content.style.display = 'block';
   }
 }
 function closeSum() { document.getElementById('sumOv').classList.add('hidden'); }
