@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-05-27",
+  "description": "NEB TLC knowledge base manifest. Add new entries here and run scripts/ingest.js to update the vector database.",
+  "documents": [
+    {
+      "id": "learning-science-foundations",
+      "path": "tier1-foundational/learning-science-foundations.md",
+      "tier": 1,
+      "topic": "learning-science",
+      "status": "active"
+    },
+    {
+      "id": "assessment-and-learning-outcomes",
+      "path": "tier1-foundational/assessment-and-learning-outcomes.md",
+      "tier": 1,
+      "topic": "assessment",
+      "status": "active"
+    },
+    {
+      "id": "course-and-syllabus-design",
+      "path": "tier1-foundational/course-and-syllabus-design.md",
+      "tier": 1,
+      "topic": "course-design",
+      "status": "active"
+    },
+    {
+      "id": "inclusive-pedagogy-udl",
+      "path": "tier2-contextual/inclusive-pedagogy-udl.md",
+      "tier": 2,
+      "topic": "inclusive-pedagogy",
+      "status": "active"
+    },
+    {
+      "id": "instructional-video-and-media",
+      "path": "tier2-contextual/instructional-video-and-media.md",
+      "tier": 2,
+      "topic": "instructional-video",
+      "status": "active"
+    },
+    {
+      "id": "gamification",
+      "path": "tier2-contextual/gamification.md",
+      "tier": 2,
+      "topic": "gamification",
+      "status": "active"
+    },
+    {
+      "id": "guided-notes",
+      "path": "tier2-contextual/guided-notes.md",
+      "tier": 2,
+      "topic": "guided-notes",
+      "status": "active"
+    },
+    {
+      "id": "experiential-learning-hips",
+      "path": "tier2-contextual/experiential-learning-hips.md",
+      "tier": 2,
+      "topic": "experiential-learning",
+      "status": "active"
+    },
+    {
+      "id": "ai-in-teaching-and-learning",
+      "path": "tier2-contextual/ai-in-teaching-and-learning.md",
+      "tier": 2,
+      "topic": "ai-education",
+      "status": "active"
+    }
+  ]
+}
