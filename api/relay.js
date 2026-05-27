@@ -169,14 +169,18 @@ function buildSystemPrompt(mode, teachingContext, chunks) {
 }
 
 function formatKnowledgeBlock(chunks) {
-  const tier1Lines = chunks.tier1.map(c =>
-    `#### ${c.heading}\n${c.content}`
-  ).join('\n\n');
+  // Each chunk is formatted with its source citation so the model can attribute
+  // specific claims to the correct paper and encourage faithful quotation.
+  const formatChunk = c => {
+    const citation = c.source_citation ? `\nSOURCE: ${c.source_citation}` : '';
+    const locator  = c.locator         ? ` | ${c.locator}` : '';
+    return `#### ${c.heading}${citation}${locator}\n\n${c.content}`;
+  };
+
+  const tier1Lines = chunks.tier1.map(formatChunk).join('\n\n');
 
   const tier2Lines = chunks.tier2.length > 0
-    ? '\n\n### Contextual Knowledge\n\n' + chunks.tier2.map(c =>
-        `#### ${c.heading}\n${c.content}`
-      ).join('\n\n')
+    ? '\n\n### Contextual Knowledge\n\n' + chunks.tier2.map(formatChunk).join('\n\n')
     : '';
 
   return `\n\n## Knowledge Base\n\n### Foundational Principles\n\n${tier1Lines}${tier2Lines}`;
@@ -278,7 +282,8 @@ Numbered steps, one line each. Maximum 5–7 steps:
 - ALWAYS include the mandatory closing statement at the end of every consultation — never omit it
 - ALWAYS limit Quick Fix to ONE strategy; Explore Solutions to a maximum of TWO strategies
 - ALWAYS provide complete References for every strategy, including the last one
-- NEVER fabricate references — if no research is available, say so explicitly
+- NEVER fabricate references — cite only from the Retrieved Knowledge Base above. If the knowledge base does not contain information relevant to a query, say so explicitly and direct faculty to excellence@bu.edu
+- ALWAYS ground recommendations in specific retrieved passages. When the knowledge base contains a direct quote (marked with > ), use it — do not paraphrase what you can quote
 - NEVER include raw effect sizes, statistics, or numerical study results — present evidence as descriptive prose only
 - NEVER write partial citations, author-name-only references, or placeholders — every citation must be complete APA 7th edition
 - NEVER include DOIs in any citation anywhere — omit them entirely in both chat and summary

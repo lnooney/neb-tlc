@@ -3,31 +3,28 @@
 //
 // Reads all active documents from knowledge-base/manifest.json, splits each
 // document into chunks at H2 (##) section boundaries, embeds each chunk with
-// Voyage AI, and upserts the embeddings into Supabase pgvector.
+// Voyage AI, and upserts the embeddings and source citations into Supabase.
 //
 // Run this script whenever you add or update knowledge base documents.
 //
 // PREREQUISITES
 //   node >= 18 (uses built-in fetch)
-//   npm install gray-matter @supabase/supabase-js
+//   npm install gray-matter @supabase/supabase-js dotenv
 //   Run scripts/schema.sql in Supabase first
 //
 // USAGE
 //   node scripts/ingest.js
 //
-// ENVIRONMENT VARIABLES (create a .env file in the project root, or set these
-// in your shell — see SETUP.md for where to get each value)
+// ENVIRONMENT VARIABLES (create a .env file in the project root)
 //   VOYAGE_API_KEY       — Voyage AI API key (voyageai.com)
 //   SUPABASE_URL         — https://yourproject.supabase.co
 //   SUPABASE_SERVICE_KEY — Service role key (Settings > API in Supabase dashboard)
-//                          Use the service key, not the anon key — ingest needs write access
 
 'use strict';
 
 const fs   = require('fs');
 const path = require('path');
 
-// Load .env file if present (install dotenv with: npm install dotenv)
 try { require('dotenv').config(); } catch {}
 
 const VOYAGE_EMBED_URL = 'https://api.voyageai.com/v1/embeddings';
@@ -35,14 +32,13 @@ const VOYAGE_MODEL     = 'voyage-3';
 const KB_ROOT          = path.join(__dirname, '..', 'knowledge-base');
 const MANIFEST_PATH    = path.join(KB_ROOT, 'manifest.json');
 
-// Pause between Voyage AI calls to stay within rate limits
-// Free tier: 300 requests/min. 300ms delay = ~200 RPM with headroom.
+// Pause between Voyage AI calls to stay within rate limits (free tier: 300 RPM)
 const EMBED_DELAY_MS = 300;
 
 async function main() {
-  const voyageKey    = process.env.VOYAGE_API_KEY;
-  const supabaseUrl  = process.env.SUPABASE_URL;
-  const supabaseKey  = process.env.SUPABASE_SERVICE_KEY;
+  const voyageKey   = process.env.VOYAGE_API_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
   if (!voyageKey || !supabaseUrl || !supabaseKey) {
     console.error(
@@ -53,13 +49,11 @@ async function main() {
     process.exit(1);
   }
 
-  // Dynamic import for ESM-only packages
   const { createClient } = await import('@supabase/supabase-js');
   const matter           = (await import('gray-matter')).default;
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  // Verify Supabase connection
   const { error: pingErr } = await supabase.from('knowledge_chunks').select('id').limit(1);
   if (pingErr) {
     console.error('\nCannot reach Supabase table "knowledge_chunks".');
@@ -90,6 +84,12 @@ async function main() {
 
     console.log(`${doc.id}  (${chunks.length} chunks)`);
 
+    // Determine the primary source citation for this document.
+    // If the document has one source, every chunk uses it.
+    // If it has multiple sources, chunks use the per-section source if tagged,
+    // or fall back to listing all sources.
+    const primaryCitation = buildPrimaryCitation(fm.sources);
+
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
       process.stdout.write(`  [${i + 1}/${chunks.length}] ${chunk.heading} … `);
@@ -97,16 +97,21 @@ async function main() {
       try {
         const embedding = await embedText(chunk.text, voyageKey);
 
+        // Use section-level source if tagged in the heading, else document-level
+        const sourceCitation = chunk.sourceCitation || primaryCitation;
+
         const { error } = await supabase
           .from('knowledge_chunks')
           .upsert(
             {
-              document_id: doc.id,
-              chunk_index: i,
-              tier:        doc.tier  ?? fm.tier,
-              topic:       doc.topic ?? fm.topic,
-              heading:     chunk.heading,
-              content:     chunk.text,
+              document_id:     doc.id,
+              chunk_index:     i,
+              tier:            doc.tier  ?? fm.tier,
+              topic:           doc.topic ?? fm.topic,
+              heading:         chunk.heading,
+              content:         chunk.text,
+              source_citation: sourceCitation,
+              locator:         chunk.locator || null,
               embedding,
               metadata: {
                 title:        fm.title,
@@ -142,40 +147,57 @@ async function main() {
 }
 
 // Split markdown content into chunks at H2 (##) section boundaries.
-// Each chunk includes the section heading and its content as a single text block.
-// The document title is prepended so each chunk is self-contained for retrieval.
+// Each chunk includes the section heading and its full content.
+//
+// Supports optional per-section source tagging in the heading line:
+//   ## Section Title  [Source: Author et al., Year]
+// This allows multi-source documents to attribute each section correctly.
 function splitIntoChunks(content, docTitle) {
   const lines   = content.split('\n');
   const chunks  = [];
-  let heading   = docTitle;
-  let bodyLines = [];
+  let heading         = docTitle;
+  let sourceCitation  = null;
+  let locator         = null;
+  let bodyLines       = [];
 
   const flushChunk = () => {
     const body = bodyLines.join('\n').trim();
     if (body) {
-      chunks.push({
-        heading,
-        text: `${heading}\n\n${body}`
-      });
+      chunks.push({ heading, text: `${heading}\n\n${body}`, sourceCitation, locator });
     }
   };
 
   for (const line of lines) {
     if (line.startsWith('## ')) {
       flushChunk();
-      heading   = line.replace(/^##\s+/, '').trim();
-      bodyLines = [];
+      bodyLines      = [];
+      sourceCitation = null;
+      locator        = null;
+
+      // Parse optional inline source tag: ## Heading  [Source: Full citation]
+      const sourceMatch = line.match(/\[Source:\s*(.+?)\]/);
+      const locatorMatch = line.match(/\[Locator:\s*(.+?)\]/);
+      heading        = line.replace(/^##\s+/, '').replace(/\[Source:[^\]]+\]/, '').replace(/\[Locator:[^\]]+\]/, '').trim();
+      if (sourceMatch)  sourceCitation = sourceMatch[1].trim();
+      if (locatorMatch) locator        = locatorMatch[1].trim();
     } else {
       bodyLines.push(line);
     }
   }
-  flushChunk(); // last section
+  flushChunk();
 
   return chunks;
 }
 
-// Call Voyage AI to embed a single text string.
-// input_type: "document" for knowledge base content (vs. "query" for search queries)
+// Build a primary citation string from the sources array in frontmatter.
+// For single-source documents, returns the one citation.
+// For multi-source documents, returns a semicolon-separated list.
+function buildPrimaryCitation(sources) {
+  if (!sources || sources.length === 0) return null;
+  if (sources.length === 1) return sources[0].citation;
+  return sources.map(s => s.short).join('; ');
+}
+
 async function embedText(text, apiKey) {
   const resp = await fetch(VOYAGE_EMBED_URL, {
     method: 'POST',
