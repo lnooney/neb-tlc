@@ -42,6 +42,13 @@ const VOYAGE_MODEL     = 'voyage-3';
 const TIER1_CHUNK_COUNT = 6;
 const TIER2_CHUNK_COUNT = 5;
 
+// BU library proxy prefix. Source URLs are wrapped with this so faculty reach
+// authenticated full-text access directly rather than hitting a paywall.
+// Set LIBRARY_PROXY_URL in Val.town environment variables to override.
+// Format: https://ezproxy.bu.edu/login?url=
+// Leave blank to use raw DOI URLs instead.
+const DEFAULT_PROXY = 'https://ezproxy.bu.edu/login?url=';
+
 // ── ENTRY POINT ──────────────────────────────────────────────────────────────
 
 export default async function(req) {
@@ -169,12 +176,18 @@ function buildSystemPrompt(mode, teachingContext, chunks) {
 }
 
 function formatKnowledgeBlock(chunks) {
-  // Each chunk is formatted with its source citation so the model can attribute
-  // specific claims to the correct paper and encourage faithful quotation.
+  // Each chunk is formatted with its source citation and URL so the model can
+  // attribute specific claims and surface verified library links to faculty.
+  const proxyPrefix = Deno.env.get('LIBRARY_PROXY_URL') ?? DEFAULT_PROXY;
+
   const formatChunk = c => {
     const citation = c.source_citation ? `\nSOURCE: ${c.source_citation}` : '';
-    const locator  = c.locator         ? ` | ${c.locator}` : '';
-    return `#### ${c.heading}${citation}${locator}\n\n${c.content}`;
+    const fullUrl  = c.source_url
+      ? proxyPrefix + encodeURIComponent(c.source_url)
+      : null;
+    const url     = fullUrl  ? `\nURL: ${fullUrl}`       : '';
+    const locator = c.locator ? `\nLOCATOR: ${c.locator}` : '';
+    return `#### ${c.heading}${citation}${url}${locator}\n\n${c.content}`;
   };
 
   const tier1Lines = chunks.tier1.map(formatChunk).join('\n\n');
@@ -269,7 +282,9 @@ Numbered steps, one line each. Maximum 5–7 steps:
 2–3 sentences, narrative. Key UDL consideration and who benefits most.
 
 **References**
-⚠️ MANDATORY for EVERY strategy including the last one. Complete APA 7th edition. No DOIs. No partial entries.
+⚠️ MANDATORY for EVERY strategy including the last one. Complete APA 7th edition. No partial entries. Include the source URL on a new line after each entry if one appears in the knowledge base metadata for that source — use it exactly as provided, do not modify or fabricate it. Example format:
+Winkelmes, M. A., Bernacki, M., Butler, J., Zochowski, M., Golanics, J., & Weavil, K. H. (2016). A teaching intervention that increases underserved college students' success. Peer Review, 18(1/2), 31–36.
+https://doi.org/xxxxx
 
 ---
 
@@ -286,7 +301,7 @@ Numbered steps, one line each. Maximum 5–7 steps:
 - ALWAYS ground recommendations in specific retrieved passages. When the knowledge base contains a direct quote (marked with > ), use it — do not paraphrase what you can quote
 - NEVER include raw effect sizes, statistics, or numerical study results — present evidence as descriptive prose only
 - NEVER write partial citations, author-name-only references, or placeholders — every citation must be complete APA 7th edition
-- NEVER include DOIs in any citation anywhere — omit them entirely in both chat and summary
+- URLs in References: include a source URL ONLY when one appears in the URL field of the retrieved knowledge base metadata. Copy it exactly. Never fabricate, guess, or modify a URL.
 - NEVER cite conference proceedings, white papers, or practitioner reports outside the knowledge base
 - NEVER use non-English characters, words, or scripts
 - NEVER refer to the faculty member in the third person

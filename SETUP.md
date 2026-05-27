@@ -139,6 +139,7 @@ In Val.town, go to **Settings → Environment Variables** and add:
 | `VOYAGE_API_KEY` | Your Voyage AI API key |
 | `SUPABASE_URL` | Your Supabase project URL |
 | `SUPABASE_ANON_KEY` | Your Supabase anon/public key |
+| `LIBRARY_PROXY_URL` | BU EZProxy prefix: `https://ezproxy.bu.edu/login?url=` — source URLs in recommendations will be wrapped with this so faculty reach authenticated full-text access. Omit to use raw DOI URLs instead. |
 
 5. Note the URL of your new val — it will look like `https://yourname--nebtlc_v2_relay.web.val.run`.
 

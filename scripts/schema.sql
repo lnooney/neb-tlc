@@ -17,7 +17,8 @@ create table if not exists knowledge_chunks (
   topic           text,                 -- e.g. "learning-science"
   heading         text,                 -- H2 section heading
   content         text not null,        -- full text of the chunk
-  source_citation text,                 -- full APA 7th edition citation for this chunk's primary source
+  source_citation text,                 -- full APA 7th edition citation (no DOI/URL in citation text)
+  source_url      text,                 -- verified DOI or stable URL to full text (e.g. https://doi.org/...)
   locator         text,                 -- page number, section, or other location in the source (e.g. "p. 33", "Table 2")
   embedding       vector(1024),         -- Voyage AI voyage-3 produces 1024-dim vectors
   metadata        jsonb,                -- title, tags, sources, last_updated, path
@@ -55,6 +56,7 @@ returns table (
   heading         text,
   content         text,
   source_citation text,
+  source_url      text,
   locator         text,
   similarity      float
 )
@@ -69,6 +71,7 @@ as $$
     heading,
     content,
     source_citation,
+    source_url,
     locator,
     1 - (embedding <=> query_embedding) as similarity
   from knowledge_chunks
@@ -79,8 +82,12 @@ as $$
   limit match_count;
 $$;
 
--- ── MIGRATION (run these if you already created the table with the v1 schema) ──
+-- ── MIGRATION ─────────────────────────────────────────────────────────────────
+-- If you already ran an earlier version of this schema, run these ALTER TABLE
+-- statements to add the new columns, then re-run the match_chunks function above.
+--
 -- alter table knowledge_chunks add column if not exists source_citation text;
+-- alter table knowledge_chunks add column if not exists source_url text;
 -- alter table knowledge_chunks add column if not exists locator text;
 -- drop function if exists match_chunks(vector, int, int);
--- then re-run the create or replace function above
+-- (then re-run the create or replace function block above)

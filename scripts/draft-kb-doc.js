@@ -191,9 +191,10 @@ title: "[Full title of the paper or book]"
 tier: ${tier}
 topic: ${topic || '[infer from content — use a short hyphenated slug like active-learning or feedback-design]'}
 sources:
-  - citation: "[Full APA 7th edition citation — author(s), year, title, journal/publisher, volume/issue/pages. No DOI.]"
+  - citation: "[Full APA 7th edition citation — author(s), year, title, journal/publisher, volume/issue/pages. No DOI in the citation text itself.]"
     short: "[Author et al., Year]"
     type: [journal-article | book | book-chapter | report]
+    url: "[DOI URL if visible in the paper, e.g. https://doi.org/... — leave blank for books without a stable URL]"
 tags:
   - [3–8 relevant lowercase hyphenated tags]
 last_updated: "[YYYY-MM — use the paper's publication year]"
@@ -226,6 +227,7 @@ status: draft
 - The knowledge base is for faculty development. Focus on: key findings, pedagogical implications, practical recommendations, and methodological notes that affect how findings should be interpreted.
 - Skip: literature review background, detailed statistical methodology, acknowledgments, references list, and author bios.
 - If the paper has an Abstract, Introduction, and Discussion/Conclusion, those sections typically contain the most quotable claims — prioritize them.
+- For the `url` field: look for a DOI in the paper header, footer, or first page (it usually appears as "https://doi.org/..." or "DOI: 10.xxxx/..."). Include it exactly as written. If you cannot find one, leave the url field blank — do NOT guess or construct a URL.
 ${truncatedNote}
 
 ## PDF TEXT

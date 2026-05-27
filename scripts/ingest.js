@@ -84,11 +84,12 @@ async function main() {
 
     console.log(`${doc.id}  (${chunks.length} chunks)`);
 
-    // Determine the primary source citation for this document.
+    // Determine the primary source citation and URL for this document.
     // If the document has one source, every chunk uses it.
-    // If it has multiple sources, chunks use the per-section source if tagged,
+    // If it has multiple sources, chunks use a per-section source if tagged,
     // or fall back to listing all sources.
     const primaryCitation = buildPrimaryCitation(fm.sources);
+    const primaryUrl      = buildPrimaryUrl(fm.sources);
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
@@ -99,6 +100,7 @@ async function main() {
 
         // Use section-level source if tagged in the heading, else document-level
         const sourceCitation = chunk.sourceCitation || primaryCitation;
+        const sourceUrl      = chunk.sourceUrl      || primaryUrl;
 
         const { error } = await supabase
           .from('knowledge_chunks')
@@ -111,7 +113,8 @@ async function main() {
               heading:         chunk.heading,
               content:         chunk.text,
               source_citation: sourceCitation,
-              locator:         chunk.locator || null,
+              source_url:      sourceUrl      || null,
+              locator:         chunk.locator  || null,
               embedding,
               metadata: {
                 title:        fm.title,
@@ -191,11 +194,20 @@ function splitIntoChunks(content, docTitle) {
 
 // Build a primary citation string from the sources array in frontmatter.
 // For single-source documents, returns the one citation.
-// For multi-source documents, returns a semicolon-separated list.
+// For multi-source documents, returns a semicolon-separated list of short refs.
 function buildPrimaryCitation(sources) {
   if (!sources || sources.length === 0) return null;
   if (sources.length === 1) return sources[0].citation;
   return sources.map(s => s.short).join('; ');
+}
+
+// Build a primary URL from the sources array.
+// Returns the URL of the first source that has one, or null.
+// For multi-source documents, per-section [Source:] tags should carry their own URLs.
+function buildPrimaryUrl(sources) {
+  if (!sources || sources.length === 0) return null;
+  const withUrl = sources.find(s => s.url);
+  return withUrl ? withUrl.url : null;
 }
 
 async function embedText(text, apiKey) {
