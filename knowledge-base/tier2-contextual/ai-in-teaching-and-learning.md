@@ -7,9 +7,11 @@ sources:
   - citation: "Ott, C., Salehi, S., & Lowe, D. (2024). Exploring the integration and utilisation of generative AI in formative e-assessments: A case study in higher education. Assessment & Evaluation in Higher Education."
     short: "Ott et al., 2024"
     type: journal-article
-  - citation: "Acuyo Cespedes, A. (2025). Pedagogical shifts in the age of generative AI: Faculty perspectives from a higher education context. Journal of Pedagogical Sociology and Psychology, 7(3). https://doi.org/10.33902/jpsp.202537244"
+    url: ""  # Add DOI — search https://doi.org for this article (Assessment & Evaluation in Higher Education, 2024)
+  - citation: "Acuyo Cespedes, A. (2025). Pedagogical shifts in the age of generative AI: Faculty perspectives from a higher education context. Journal of Pedagogical Sociology and Psychology, 7(3)."
     short: "Acuyo Cespedes, 2025"
     type: journal-article
+    url: "https://doi.org/10.33902/jpsp.202537244"
 tags:
   - AI
   - generative-AI

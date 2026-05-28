@@ -7,12 +7,15 @@ sources:
   - citation: "Kolb, A. Y., & Kolb, D. A. (2017). Experiential learning theory as a guide for experiential educators in higher education. Experiential Learning & Teaching in Higher Education, 1(1), 7–44."
     short: "Kolb & Kolb, 2017"
     type: journal-article
-  - citation: "Association of American Colleges & Universities. (n.d.). High-impact practices. https://www.aacu.org/trending-topics/high-impact"
+    url: ""  # Add DOI or journal URL — search https://nsuworks.nova.edu/elthe/ for this article
+  - citation: "Association of American Colleges & Universities. (n.d.). High-impact practices. AAC&U."
     short: "AAC&U, n.d."
     type: report
+    url: "https://www.aacu.org/trending-topics/high-impact"
   - citation: "MacGregor, J. (2022). Restructuring large classes to create communities of learners. In Experiential and High-Impact Practices in Higher Education."
     short: "MacGregor, 2022"
     type: book
+    url: ""  # Add BU library catalog link or publisher page for this book
 tags:
   - experiential-learning
   - high-impact-practices

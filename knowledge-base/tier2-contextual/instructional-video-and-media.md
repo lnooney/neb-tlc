@@ -7,6 +7,7 @@ sources:
   - citation: "Noetel, M., Griffith, S., Delaney, O., Sanders, T., Parker, P., del Pozo Cruz, B., & Lonsdale, C. (2021). Video improves learning in higher education: A systematic review. Review of Educational Research, 91(2), 204–236."
     short: "Noetel et al., 2021"
     type: journal-article
+    url: ""  # Add DOI — search https://doi.org for this article (Review of Educational Research, 91(2), 2021)
 tags:
   - video
   - media

@@ -7,6 +7,7 @@ sources:
   - citation: "Biggers, B., & Luo, T. (2020). Guiding students to success: A systematic review of research on guided notes as an instructional strategy from 2009–2019. Journal of University Teaching & Learning Practice, 17(3)."
     short: "Biggers & Luo, 2020"
     type: journal-article
+    url: ""  # Add URL — Journal of University Teaching & Learning Practice is open access; search https://ro.uow.edu.au/jutlp/
 tags:
   - guided-notes
   - note-taking

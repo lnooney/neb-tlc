@@ -7,6 +7,7 @@ sources:
   - citation: "Lister, M. C. (2015). Gamification: The effect on student motivation and performance at the post-secondary level. Issues and Trends in Educational Technology, 3(2)."
     short: "Lister, 2015"
     type: journal-article
+    url: ""  # Add URL — Issues and Trends in Educational Technology is open access; search https://journals.uair.arizona.edu/index.php/itet
 tags:
   - gamification
   - motivation

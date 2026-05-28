@@ -4,12 +4,14 @@ title: "Assessment and Learning Outcomes"
 tier: 1
 topic: assessment
 sources:
-  - citation: "Goss, H. (2022). Student learning outcomes assessment in higher education and in academic libraries: A review of the literature. The Journal of Academic Librarianship, 48(3). https://doi.org/10.1016/j.acalib.2021.102485"
+  - citation: "Goss, H. (2022). Student learning outcomes assessment in higher education and in academic libraries: A review of the literature. The Journal of Academic Librarianship, 48(3)."
     short: "Goss, 2022"
     type: journal-article
-  - citation: "Ritchie, M. J., Parker, L. E., & Kirchner, J. E. (2020). From novice to expert: A qualitative study of implementation facilitation skills. Implementation Science Communications, 1(25). https://doi.org/10.1186/s43058-020-00006-8"
+    url: "https://doi.org/10.1016/j.acalib.2021.102485"
+  - citation: "Ritchie, M. J., Parker, L. E., & Kirchner, J. E. (2020). From novice to expert: A qualitative study of implementation facilitation skills. Implementation Science Communications, 1(25)."
     short: "Ritchie et al., 2020"
     type: journal-article
+    url: "https://doi.org/10.1186/s43058-020-00006-8"
 tags:
   - assessment
   - student-learning-outcomes

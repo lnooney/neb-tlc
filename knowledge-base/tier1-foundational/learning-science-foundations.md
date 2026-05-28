@@ -7,6 +7,7 @@ sources:
   - citation: "Ambrose, S. A., Bridges, M. W., DiPietro, M., Lovett, M. C., & Norman, M. K. (2010). How learning works: Seven research-based principles for smart teaching. Jossey-Bass."
     short: "Ambrose et al., 2010"
     type: book
+    url: ""  # Add BU library catalog link — e.g. search.bu.edu for this title
 tags:
   - prior-knowledge
   - knowledge-organization

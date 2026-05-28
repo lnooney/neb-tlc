@@ -7,12 +7,15 @@ sources:
   - citation: "Winkelmes, M. A., Bernacki, M., Butler, J., Zochowski, M., Golanics, J., & Weavil, K. H. (2016). A teaching intervention that increases underserved college students' success. Peer Review, 18(1/2), 31–36."
     short: "Winkelmes et al., 2016"
     type: journal-article
-  - citation: "CAST. (2024). Universal design for learning guidelines version 3.0. CAST. https://udlguidelines.cast.org"
+    url: ""  # Add DOI or AAC&U link — search https://www.aacu.org/peerreview for this article
+  - citation: "CAST. (2024). Universal design for learning guidelines version 3.0. CAST."
     short: "CAST, 2024"
     type: framework
+    url: "https://udlguidelines.cast.org"
   - citation: "Hogan, K. A., & Sathy, V. (2022). Inclusive teaching: Strategies for promoting equity in the college classroom. West Virginia University Press."
     short: "Hogan & Sathy, 2022"
     type: book
+    url: ""  # Add BU library catalog link — e.g. search.bu.edu for this title
 tags:
   - inclusive-pedagogy
   - UDL

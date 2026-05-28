@@ -4,12 +4,14 @@ title: "Course and Syllabus Design"
 tier: 1
 topic: course-design
 sources:
-  - citation: "UC San Diego Teaching + Learning Commons. (n.d.). Learner-centered syllabus guide. Retrieved from https://ucsd.edu"
+  - citation: "UC San Diego Teaching + Learning Commons. (n.d.). Learner-centered syllabus guide. UC San Diego."
     short: "UC San Diego, n.d."
     type: report
+    url: ""  # Add direct URL to the UCSD learner-centered syllabus guide page
   - citation: "Harrington, C., & Thomas, M. (2018). Designing a motivational syllabus. In Designing a motivational syllabus (pp. 19–55). Stylus Publishing / Taylor & Francis Group."
     short: "Harrington & Thomas, 2018"
     type: book
+    url: ""  # Add BU library catalog link — e.g. search.bu.edu for this title
 tags:
   - syllabus-design
   - learner-centered
