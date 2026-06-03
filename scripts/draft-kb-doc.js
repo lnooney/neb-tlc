@@ -225,7 +225,7 @@ status: draft
 - Do NOT hallucinate findings. If the paper does not clearly support a claim, do not include it.
 - Do NOT import findings from other papers you know about — extract only from the text below.
 - The knowledge base is for faculty development. Focus on: key findings, pedagogical implications, practical recommendations, and methodological notes that affect how findings should be interpreted.
-- Skip: literature review background, detailed statistical methodology, acknowledgments, references list, and author bios.
+- Skip: background literature review sections that merely motivate the study, detailed statistical methodology, acknowledgments, references list, and author bios. Exception: if the paper itself is a systematic review, meta-analysis, or scoping review, the synthesis of findings across studies IS the primary content — extract it fully, including effect sizes, moderating variables, and study-level comparisons that support the conclusions.
 - If the paper has an Abstract, Introduction, and Discussion/Conclusion, those sections typically contain the most quotable claims — prioritize them.
 - For the `url` field: look for a DOI in the paper header, footer, or first page (it usually appears as "https://doi.org/..." or "DOI: 10.xxxx/..."). Include it exactly as written. If you cannot find one, leave the url field blank — do NOT guess or construct a URL.
 ${truncatedNote}
