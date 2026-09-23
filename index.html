@@ -511,6 +511,15 @@ function escapeHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// The API response's content array isn't guaranteed to start with the text
+// block — a leading thinking block (no .text field) pushes it back, so find
+// it by type rather than assuming index 0.
+function extractReplyText(content) {
+  if (!Array.isArray(content)) return '';
+  const block = content.find(c => c.type === 'text');
+  return block ? block.text : '';
+}
+
 // ── SYSTEM PROMPT ──────────────────────────────────────────
 function buildSys() {
   const today = new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -1180,7 +1189,7 @@ async function openSum() {
     if (d.type === 'error' || d.error) {
       throw new Error(d.error?.message || 'The request could not be processed.');
     }
-    content.textContent = d.content?.[0]?.text || 'Summary generation failed — please try again.';
+    content.textContent = extractReplyText(d.content) || 'Summary generation failed — please try again.';
     printBtn.disabled = false;
     printBtn.style.opacity = '1';
     printBtn.style.cursor = 'pointer';
@@ -1541,7 +1550,7 @@ async function callNEB() {
     if (d.type === 'error' || d.error) {
       throw new Error(d.error?.message || 'The request could not be processed.');
     }
-    const reply = d.content?.[0]?.text || 'Something went wrong — please try again.';
+    const reply = extractReplyText(d.content) || 'Something went wrong — please try again.';
     history.push({role:'assistant', content:reply});
     displayLog.push({role:'ai', text:reply});
     hideTyping(); addMsg('ai', md(reply), reply);

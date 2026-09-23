@@ -33,6 +33,8 @@ As of the most recent check (2026-09-23), the relay is a bare pass-through: it r
 
 The `MODEL` constant is the single source of truth for which Claude model is called; both fetch calls (`callNEB()` for chat, `openSum()` for the summary) reference it rather than hardcoding a model string.
 
+Both call sites extract the reply via `extractReplyText(d.content)`, which finds the first `type: 'text'` block rather than indexing `content[0]` directly — the API response's content array isn't guaranteed to start with the text block (a leading `thinking` block, which has no `.text` field, pushes the real reply back). Indexing `[0]` directly silently produces `undefined` (no thrown error, since the HTTP call succeeds and `d.error` is unset) and falls through to the generic "Something went wrong"/"Summary generation failed" placeholder — this bit us once already after the Sonnet 5 swap, since large-system-prompt requests like this one's are exactly the kind likely to trigger a thinking block. Don't reintroduce direct `content[0]` indexing.
+
 ### System prompt assembly
 There's no server-side session — `history` (the raw Anthropic messages array, sent verbatim on every call) and `displayLog` (a parallel array used only for rendering) are held in browser memory and rebuilt from scratch each session.
 
