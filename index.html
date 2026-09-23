@@ -40,7 +40,7 @@ html,body{height:100%;font-size:17px}
 body{font-family:var(--font);background:var(--surface);color:var(--gray-800);display:flex;flex-direction:column;overflow:hidden;line-height:1.6}
 
 /* OVERLAY */
-.overlay{position:fixed;inset:0;background:rgba(10,22,42,.65);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
+.overlay{position:fixed;inset:0;background:rgba(10,22,42,.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease}
 .overlay.hidden{display:none}
 .modal{background:var(--white);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);max-width:560px;width:100%;overflow:hidden;animation:modalIn .22s cubic-bezier(.34,1.4,.64,1)}
 .modal-wide{max-width:680px}
@@ -184,7 +184,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 .msg-copy.copied{color:#178A4C}
 
 /* DRAG & DROP */
-.drop-overlay{position:fixed;inset:0;background:rgba(23,55,94,.9);backdrop-filter:blur(2px);z-index:900;display:none;align-items:center;justify-content:center;pointer-events:none}
+.drop-overlay{position:fixed;inset:0;background:rgba(23,55,94,.9);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:900;display:none;align-items:center;justify-content:center;pointer-events:none}
 .drop-overlay.on{display:flex}
 .drop-overlay-inner{border:3px dashed rgba(255,255,255,.55);border-radius:var(--r-lg);padding:44px 60px;text-align:center;color:#fff}
 .drop-overlay-inner svg{width:36px;height:36px;margin:0 auto 12px;display:block}
@@ -207,6 +207,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 .mode-btn.ex{background:var(--navy)}
 .mode-btn.ex:hover{background:#0f2540;transform:translateY(-2px);box-shadow:0 4px 14px rgba(23,55,94,.35)}
 .mode-btn-desc{font-size:.8rem;color:var(--gray-600);line-height:1.5;padding:0 2px}
+.mode-confirm{font-size:.81rem;color:var(--gray-600);text-align:center;padding:2px 0 4px}
 
 /* MODE BADGE */
 .mode-badge{display:none;align-items:center;padding:4px 11px;border-radius:20px;font-size:.71rem;font-weight:600;letter-spacing:.04em;white-space:nowrap}
@@ -406,7 +407,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 
 <script>
 const RELAY = 'https://lnooney--b59323963f5711f1a86342b51c65c3df.web.val.run';
-const MODEL = 'claude-sonnet-4-5';
+const MODEL = 'claude-sonnet-5';
 const SK = 'nebtlc_profile_v1';
 
 let history = [], displayLog = [], teachingContext = {}, currentMode = null, contextSubmitted = false, busy = false, hasRec = false, attachedFile = null;
@@ -642,6 +643,19 @@ PRINCIPLE 6 — COURSE CLIMATE: Course climate directly and measurably affects l
 
 PRINCIPLE 7 — SELF-DIRECTED LEARNING / METACOGNITION: Students who can monitor and control their own learning learn more effectively. Students don't engage in metacognition naturally and need explicit prompting. Tools: exam wrappers, reflection prompts, concept maps, self-assessment rubrics, explicit discussion of what good learning looks like.
 
+Source: Chickering, A.W., & Gamson, Z.F. (1987). Seven principles for good practice in undergraduate education. AAHE Bulletin, March 1987, 3–7.
+
+SEVEN PRINCIPLES FOR GOOD PRACTICE (Chickering & Gamson, 1987): One of the most widely cited frameworks in higher education. Good practice:
+1. **Encourages student-faculty contact** — the single most important factor in motivation and involvement. Example: freshman seminars taught by senior faculty; undergraduate research programs pairing students with faculty as junior colleagues.
+2. **Develops reciprocity and cooperation among students** — learning is a team effort, not a solo race. Example: stable learning groups of 5–7 students meeting regularly to solve problems.
+3. **Uses active learning techniques** — students must talk, write, and apply, not just listen and memorize.
+4. **Gives prompt feedback** — frequent opportunities to perform, get feedback, and reflect. Assessment without timely feedback contributes little to learning.
+5. **Emphasizes time on task** — effective learning requires realistic, well-managed time; how a course structures time expectations shapes performance for everyone.
+6. **Communicates high expectations** — expecting more, of underprepared and well-prepared students alike, tends to produce more.
+7. **Respects diverse talents and ways of learning** — students need room to show strength in more than one mode.
+
+Practical: these work in combination — one structured group activity plus one early feedback checkpoint can move a course toward several principles at once.
+
 #### ASSESSMENT AND LEARNING OUTCOMES
 Sources:
 - Goss, H. (2022). Student learning outcomes assessment in higher education and in academic libraries: A review of the literature. The Journal of Academic Librarianship, 48(3). https://doi.org/10.1016/j.acalib.2021.102485
@@ -702,8 +716,8 @@ Key practical moves:
 Sources:
 - Winkelmes, M.A., Bernacki, M., Butler, J., Zochowski, M., Golanics, J., & Weavil, K.H. (2016). A teaching intervention that increases underserved college students' success. Peer Review, 18(1/2), 31–36.
 - CAST. (2024). Universal Design for Learning Guidelines version 3.0. Lynnfield, MA: CAST. https://udlguidelines.cast.org
-- Hogan, K.A., & Sathy, V. (2022). Inclusive teaching: Strategies for promoting equity in the college classroom. West Virginia University Press. [Chapter 7: Reflecting and documenting your inclusive practices]
-- Additional sources: UC Instructional Design and Faculty Support DEI Course Design Framework; EDUCAUSE Review DEI Course Design Rubric
+- Hogan, K.A., & Sathy, V. (2022). Inclusive teaching: Strategies for promoting equity in the college classroom. West Virginia University Press. [Chapters 3, 5, and 7]
+- University of California IDFS Community of Practice. DEI Course Design Framework; DeBacco, K., & Mattos, N. (2023). A DEI course design rubric: Supporting teaching and learning in uncertain times. EDUCAUSE Review.
 
 TILT FRAMEWORK — TRANSPARENT ASSIGNMENT DESIGN (Winkelmes et al., 2016):
 RCT with 1,800 students and 35 faculty at 7+ institutions. Two transparently redesigned take-home assignments produced statistically significant gains (p < .05):
@@ -742,12 +756,24 @@ INCLUSIVE TEACHING PRACTICES (Hogan & Sathy, 2022):
 - Inclusive reflection questions: "In what ways has your instructor demonstrated they care about your learning?" "Is there content that has made you feel included or excluded?" "How might the class climate be more inclusive?"
 - Peer observation for inclusive practice: use objective coding tools (COPUS — Classroom Observation Protocol for Undergraduate STEM) rather than impressionistic feedback. Observe across a full class session; review the syllabus and LMS too.
 - Inclusive syllabus signals: statement of high expectations + confidence students can meet them; evidence of formative practice opportunities; explicit welcome to students from diverse backgrounds; accessibility commitment.
+- Syllabus tone matters as much as content — compare a punitive rule ("Cell phones may not be used FOR ANY REASON!") to a research-grounded explanation of why phone noise affects everyone's attention, to a policy that integrates device use into the course. Tone signals whether the syllabus reads as a contract of distrust or a partnership document.
+- Add explicit, first-person welcome/belonging statements ("You have worked hard to be here; you belong here") — costs nothing for students who don't need to hear it, matters for students who do.
+- Redesign grading toward growth-mindset structures: drop the lowest grade, weight early low-stakes work less than later work, allow exam corrections, use criterion-referenced grading tied to backward-designed outcomes rather than norm-referencing.
+- Shift weight away from one or two high-stakes exams toward more, lower-stakes assessments.
 
 DEI COURSE DESIGN CONSIDERATIONS:
 - Audit course materials for representation: whose voices and perspectives are centered? Whose are absent?
 - Design assessments that allow students to connect course content to their own lived experiences, where appropriate.
 - Revisit grading weights: high-stakes single assessments disadvantage students with external demands; distributed, scaffolded assessments improve equity of outcomes.
 - Explicitly name inclusive norms in the syllabus and on the first day (not just in a "land acknowledgment" or boilerplate statement) — model what intellectual community looks like.
+
+DEI COURSE DESIGN FRAMEWORK — THE "NOW/NEXT/LATER" MODEL (UC IDFS; DeBacco & Mattos, 2023): A non-hierarchical framework for incremental inclusive redesign across 8 dimensions (Syllabus & Course Design, Student Support, Content & Engagement, Building Relationships, Inclusion, Technology, Accessibility, Continuous Improvement).
+- Deliberately NOT labeled Beginner/Intermediate/Advanced — the working group chose "Now/Next/Later" specifically to avoid a judgmental hierarchy, since DEI work is ongoing, not a competency mastered once.
+- Explicitly designed for self- or group reflection, never for tenure, promotion, or rank evaluation.
+- Example NOW move (Syllabus dimension): an explicit inclusion statement naming the instructor's commitment to valuing diversity and respecting all students.
+- Example NEXT move: activities/assignments that accommodate multiple ways of knowing and foster student ownership.
+- Example LATER move: full UDL alignment; equitable grading practices explained clearly.
+- Faculty can start in any column, not just "Now" — works best as a prompt for "what I already do" / "what I might try next," not a checklist.
 
 #### INSTRUCTIONAL VIDEO AND MEDIA
 Source: Noetel, M., Griffith, S., Delaney, O., Sanders, T., Parker, P., del Pozo Cruz, B., & Lonsdale, C. (2021). Video improves learning in higher education: A systematic review. Review of Educational Research, 91(2), 204–236.
@@ -797,6 +823,7 @@ Sources:
 - Kolb, A.Y., & Kolb, D.A. (2017). Experiential learning theory as a guide for experiential educators in higher education. Experiential Learning & Teaching in Higher Education, 1(1), 7–44.
 - Association of American Colleges & Universities. (n.d.). High-Impact Practices. https://www.aacu.org/trending-topics/high-impact
 - MacGregor, J. (2022). Restructuring large classes to create communities of learners. In Experiential and High-Impact Practices in Higher Education.
+- Roberts, J. (2018). From the editor: The possibilities and limitations of experiential learning research in higher education. Journal of Experiential Education, 41(1), 3–7.
 
 EXPERIENTIAL LEARNING THEORY — KOLB (Kolb & Kolb, 2017):
 ELT synthesizes Dewey, Piaget, Vygotsky, Lewin, and others. Core claim: learning is the process of creating knowledge through the transformation of experience. The four-mode learning cycle:
@@ -837,11 +864,18 @@ Large lecture classes can be restructured to create learning community dynamics:
 - Faculty role shifts from sole knowledge source to facilitator and expert guide.
 - Peer learning in well-structured groups produces gains comparable to smaller classes — the key is structure, not group size.
 
+RESEARCH LANDSCAPE — POSSIBILITIES AND LIMITATIONS (Roberts, 2018): Editorial on the state of the field, not a study with its own data.
+- Growth in experiential learning (EL) reflects mixed motivations: genuine pedagogical value (Kuh's High-Impact Practices; Gallup-Purdue Index links between applied learning, extracurricular involvement, long-duration projects, and postgraduate success) alongside market-driven ones (institutional differentiation, ROI framing).
+- Employers consistently rank leadership, teamwork, communication, and problem-solving as top-sought skills (NACE 2016) — all developed through well-designed EL.
+- LIMITATION: research quality is uneven. Service learning and study-abroad/outdoor EL are comparatively well studied; classroom-based and integrated curricular/co-curricular EL remain thin.
+- Explicit call for more longitudinal, rigorous, mixed-methods outcome research, and more attention to whether EL's benefits are distributed equitably.
+- Practical: EL isn't automatically higher-quality just because it's experiential — treat advocacy claims with the same evidentiary standard as any other pedagogical approach.
+
 #### AI IN TEACHING AND LEARNING
 Sources:
 - Ott, C., Salehi, S., & Lowe, D. (2024). Exploring the integration and utilisation of generative AI in formative e-assessments: A case study in higher education. Assessment & Evaluation in Higher Education.
 - Acuyo Cespedes, A. (2025). Pedagogical shifts in the age of generative AI: Faculty perspectives from a higher education context. Journal of Pedagogical Sociology and Psychology, 7(3). https://doi.org/10.33902/jpsp.202537244
-- Additional source: AI and student learning outcomes literature (2024–2025)
+- Pallant, J.L., Blijlevens, J., Campbell, A., & Jopp, R. (2025). Mastering knowledge: The impact of generative AI on student learning outcomes. Studies in Higher Education.
 
 NOTE: The AI in education field is evolving rapidly. These findings reflect research through mid-2025. Recommend faculty also consult current institutional guidance from BU IETL (excellence@bu.edu) and BU's Academic Technology office for the most current policy landscape.
 
@@ -879,6 +913,12 @@ Actionable recommendations for faculty designing in an AI context:
 4. Write a clear, specific AI policy for your syllabus: define what uses are permitted, how to disclose AI use (APA Style for AI citation is now established), and what constitutes misuse.
 5. Use AI-resistant question types: open-ended reflection connected to class-specific discussions, problems requiring course-specific data, peer review with accountability.
 6. Collaborate with colleagues: course-level and program-level coordination on AI policy prevents students from navigating inconsistent expectations.
+
+STUDENT GENAI USE AND LEARNING OUTCOMES (Pallant et al., 2025): 192 student reflections (~75,000 words) across 2 undergraduate + 1 postgraduate unit, comparing an AI-generated definition of a course concept (week 1) against the student's own definition after a 12-week semester.
+- Students using GenAI constructively or augmentatively (building on/extending the output) had significantly higher overall and assignment marks (p<.01).
+- Students using GenAI procedurally or to regurgitate its output had significantly lower marks (p<.01, p<.05).
+- Constructive/augmentative use positively predicted applied knowledge, critical thinking, and learning autonomy; procedural/regurgitative use predicted the opposite.
+- The outcome isn't "GenAI use = worse learning" — it's how it's used. Design implication: prompts that require students to critique, extend, or apply an AI-generated starting point (not just accept and restate it) operationalize the "good" pattern rather than leaving it to chance.
 
 ### TIER 3 — BOSTON UNIVERSITY POLICIES, PROCEDURES & STUDENT SUPPORT RESOURCES (consult whenever a query involves a student disclosure, referral, accommodation, or any non-pedagogical circumstance affecting a student's ability to perform academically)
 
@@ -953,8 +993,20 @@ These domains have dedicated offices that own both the policy and the process; a
 - **Illegal downloading, file-sharing, or other computing-misuse violations** → IT/Information Security under the Acceptable Use of Computing Services Policy. Note: this is a student-conduct/legal-risk matter, distinct from fair-use questions about using copyrighted material *in teaching* — those aren't covered by these conduct policies, so route classroom copyright/fair-use questions to BU Libraries rather than answering from this section.
 - **Student-athletes**: expected to maintain good academic standing and attend class unless officially excused for competition; Athletics/coaching staff enforce the broader Student-Athlete Code of Conduct — faculty just need standard excused-absence documentation for competition travel, handled like any other approved absence.
 
+#### J. FERPA AND STUDENT RECORDS
+Source: Policies on Student Records at Boston University (Office of the University Registrar).
+FERPA protects student education-record privacy: it restricts disclosure of personally identifiable information, limits access to what's legally permitted or student-consented, and gives students control over their own records. Practical for faculty: don't share grades, attendance, or other identifiable information with parents, other students, or outside parties without the student's consent, however well-intentioned. Disciplinary records are handled separately by OSCCR, not the instructor or Registrar; transcripts route through the Registrar.
+
+#### K. GMS-SPECIFIC ACADEMIC POLICIES
+Sources: GMS Academic Policies and Procedures; Graduate Medical Sciences Student Handbook — Boston University School of Medicine, Division of Graduate Medical Sciences.
+For faculty teaching in GMS programs: attendance carries real academic consequences (excessive absence can trigger required withdrawal or a failing grade); religious observance needs advance notice; bereavement leave is up to 5 weekdays for immediate family with documentation; PhD students have a 60-day childbirth/adoption accommodation with coursework/exam extensions and continued stipend support. Disability accommodations route through GMS's Office of Disability Services (ODS) and include published Minimum Technical Standards (observation/communication, motor/sensory function, critical thinking, professional behavior). The same University-wide AI/Academic Conduct Code provisions (Tier 3, section D) apply in GMS as everywhere else.
+
+#### L. SUSPENSION AND TRANSFER CREDIT
+Source: Suspension and Transfer Credit Policy (Boston University).
+A student suspended from BU — for academic misconduct, a Code of Student Responsibilities violation, or a sexual misconduct finding — cannot earn transferable credit for coursework completed elsewhere during the suspension. Relevant if a faculty member is asked to verify enrollment, write a recommendation, or evaluate transfer credit for a recently suspended student — check with the Registrar/Dean's office rather than assuming external coursework counts.
+
 ## Knowledge Base Status
-ACTIVE: Learning science foundations (Ambrose et al., 2010); assessment and learning outcomes (Goss, 2022; Ritchie et al., 2020); course and syllabus design (UC San Diego, n.d.; Harrington & Thomas, 2018); inclusive pedagogy/UDL (Winkelmes et al., 2016; CAST, 2024; Hogan & Sathy, 2022); instructional video (Noetel et al., 2021); gamification (Lister, 2015); guided notes (Biggers & Luo, 2020); experiential learning/HIPs (Kolb & Kolb, 2017; AAC&U, n.d.; MacGregor, 2022); AI in teaching and learning (Ott et al., 2024; Acuyo Cespedes, 2025); Boston University policies and student support resources (Tier 3 — mandatory reporting, academic integrity/AI, accommodations, financial aid/basic needs, conduct, campus climate).
+ACTIVE: Learning science foundations (Ambrose et al., 2010; Chickering & Gamson, 1987); assessment and learning outcomes (Goss, 2022; Ritchie et al., 2020); course and syllabus design (UC San Diego, n.d.; Harrington & Thomas, 2018); inclusive pedagogy/UDL (Winkelmes et al., 2016; CAST, 2024; Hogan & Sathy, 2022, Chs. 3, 5, 7; UC IDFS/DeBacco & Mattos, 2023); instructional video (Noetel et al., 2021); gamification (Lister, 2015); guided notes (Biggers & Luo, 2020); experiential learning/HIPs (Kolb & Kolb, 2017; AAC&U, n.d.; MacGregor, 2022; Roberts, 2018); AI in teaching and learning (Ott et al., 2024; Acuyo Cespedes, 2025; Pallant et al., 2025); Boston University policies and student support resources (Tier 3 — mandatory reporting, academic integrity/AI, accommodations, financial aid/basic needs, conduct, campus climate, FERPA/student records, GMS-specific policies, suspension and transfer credit).
 All major knowledge areas are now active. When a query falls outside these areas, draw on general learning science knowledge, acknowledge the limitation explicitly, and direct faculty to excellence@bu.edu.
 
 ## Behavioral Rules
@@ -1044,6 +1096,7 @@ function selectMode(m) {
   const welcome = document.getElementById('welcome');
   if (welcome) welcome.style.display = 'none';
   document.getElementById('inputZone').classList.remove('hidden');
+  showModeConfirm(m);
   const ta = document.getElementById('chatTa');
   if (ta) {
     ta.placeholder = m === 'quickfix'
@@ -1051,6 +1104,25 @@ function selectMode(m) {
       : "Describe the teaching challenge you'd like to explore in depth…";
     ta.focus();
   }
+}
+
+function showModeConfirm(m) {
+  const inner = document.getElementById('chatInner');
+  let el = document.getElementById('modeConfirm');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'modeConfirm';
+    el.className = 'mode-confirm';
+    inner.appendChild(el);
+  }
+  el.textContent = m === 'quickfix'
+    ? 'Quick Fix: describe your challenge below and I’ll get you one fast, actionable strategy.'
+    : 'Explore Solutions: describe your challenge below and we’ll think it through together.';
+}
+
+function clearModeConfirm() {
+  const el = document.getElementById('modeConfirm');
+  if (el) el.remove();
 }
 
 // ── TEACHING CONTEXT WIDGET ─────────────────────────────────
@@ -1445,6 +1517,7 @@ async function send() {
   }
   ta.value=''; resize(ta);
   document.getElementById('sendBtn').disabled = true;
+  clearModeConfirm();
 
   const attachment = attachedFile;
   removeAttachment();
