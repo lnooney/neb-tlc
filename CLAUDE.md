@@ -27,7 +27,9 @@ There is no build/lint/test tooling in this repo — it's a single static HTML f
 ## Architecture
 
 ### Split between this repo and the relay
-The client (`index.html`) never talks to the Anthropic API directly. Every request goes to a `RELAY` constant (a val.town HTTP endpoint, defined near the top of the `<script>` block) which holds the actual API key and proxies the request through. **The relay script itself is not in this repo** — it lives on val.town, outside Claude Code's reach in a typical session (network egress to `*.web.val.run` is commonly blocked). Any change to `MODEL`, sampling parameters, or `max_tokens` needs to be cross-checked against that external relay script by asking the user for its source — don't assume it forwards the request body unmodified.
+The client (`index.html`) never talks to the Anthropic API directly. Every request goes to a `RELAY` constant (a val.town HTTP endpoint, defined near the top of the `<script>` block) which holds the actual API key and proxies the request through. **The relay script itself is not in this repo** — it lives on val.town, outside Claude Code's reach in a typical session (network egress to `*.web.val.run` is commonly blocked, so ask the user to paste its source if you need to re-check it).
+
+As of the most recent check (2026-09-23), the relay is a bare pass-through: it reads `ANTHROPIC_API_KEY` from its own environment, forwards the client's JSON body **unmodified** to `https://api.anthropic.com/v1/messages` with a hardcoded `anthropic-version: 2023-06-01` header, and returns the response as-is. It does not inject or override `temperature`, `top_p`, `top_k`, a thinking-budget field, or `max_tokens` — whatever `index.html` sends is exactly what reaches the API. Since the relay isn't version-controlled here, it can change without this file knowing — don't assume this still holds without reconfirming if something about a model swap or request shape starts failing unexpectedly.
 
 The `MODEL` constant is the single source of truth for which Claude model is called; both fetch calls (`callNEB()` for chat, `openSum()` for the summary) reference it rather than hardcoding a model string.
 

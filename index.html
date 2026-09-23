@@ -1168,7 +1168,7 @@ async function openSum() {
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 2500,
+        max_tokens: 3500,
         system: buildSys(),
         messages: [...history, {role:'user', content: buildSumReq()}]
       }),
@@ -1527,7 +1527,7 @@ async function callNEB() {
     const r = await fetch(RELAY, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({model:MODEL, max_tokens:3500, system:buildSys(), messages:history}),
+      body: JSON.stringify({model:MODEL, max_tokens:4500, system:buildSys(), messages:history}),
       signal: controller.signal
     });
     clearTimeout(timeout);
