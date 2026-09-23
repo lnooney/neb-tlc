@@ -207,7 +207,6 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 .mode-btn.ex{background:var(--navy)}
 .mode-btn.ex:hover{background:#0f2540;transform:translateY(-2px);box-shadow:0 4px 14px rgba(23,55,94,.35)}
 .mode-btn-desc{font-size:.8rem;color:var(--gray-600);line-height:1.5;padding:0 2px}
-.mode-confirm{font-size:.81rem;color:var(--gray-600);text-align:center;padding:2px 0 4px}
 
 /* MODE BADGE */
 .mode-badge{display:none;align-items:center;padding:4px 11px;border-radius:20px;font-size:.71rem;font-weight:600;letter-spacing:.04em;white-space:nowrap}
@@ -220,8 +219,6 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 .ctx-widget h4{font-size:.75rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.07em;margin:0 0 13px}
 .ctx-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
 @media(max-width:500px){.ctx-grid{grid-template-columns:1fr}}
-.ctx-submit{background:var(--scarlet);color:#fff;border:none;border-radius:var(--r-sm);padding:9px 22px;font-family:var(--font);font-size:.86rem;font-weight:600;cursor:pointer;transition:background .14s}
-.ctx-submit:hover{background:var(--scarlet-hover)}
 
 /* SUMMARY */
 .sum-wrap{background:var(--surface);border:1px solid var(--gray-200);border-radius:var(--r);padding:18px;font-size:.84rem;line-height:1.72;white-space:pre-wrap;max-height:400px;overflow-y:auto;color:var(--gray-800);word-break:break-word}
@@ -353,6 +350,7 @@ body{font-family:var(--font);background:var(--surface);color:var(--gray-800);dis
 
 <div class="sum-bar" id="sumBar">
   <span>NEB TLC has provided recommendations — generate a downloadable consultation summary anytime.</span>
+  <button class="btn btn-red btn-sm" id="deepenBtn" style="display:none" onclick="goDeeper()">Go deeper: Explore Solutions</button>
   <button class="btn btn-navy btn-sm" onclick="openSum()">Print Summary</button>
 </div>
 
@@ -1096,7 +1094,6 @@ function selectMode(m) {
   const welcome = document.getElementById('welcome');
   if (welcome) welcome.style.display = 'none';
   document.getElementById('inputZone').classList.remove('hidden');
-  showModeConfirm(m);
   const ta = document.getElementById('chatTa');
   if (ta) {
     ta.placeholder = m === 'quickfix'
@@ -1104,33 +1101,12 @@ function selectMode(m) {
       : "Describe the teaching challenge you'd like to explore in depth…";
     ta.focus();
   }
-}
-
-function showModeConfirm(m) {
-  const inner = document.getElementById('chatInner');
-  let el = document.getElementById('modeConfirm');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'modeConfirm';
-    el.className = 'mode-confirm';
-    inner.appendChild(el);
-  }
-  el.textContent = m === 'quickfix'
-    ? 'Quick Fix: describe your challenge below and I’ll get you one fast, actionable strategy.'
-    : 'Explore Solutions: describe your challenge below and we’ll think it through together.';
-}
-
-function clearModeConfirm() {
-  const el = document.getElementById('modeConfirm');
-  if (el) el.remove();
+  if (!contextSubmitted) showContextWidget();
 }
 
 // ── TEACHING CONTEXT WIDGET ─────────────────────────────────
-function showContextPrompt() {
-  const msg = currentMode === 'quickfix'
-    ? '<p>Getting you a targeted solution quickly is the priority. Knowing a bit about your teaching context first helps make sure the recommendation fits your course. Please fill in the details below — it takes under a minute.</p>'
-    : '<p>Taking time to think carefully through a teaching challenge is one of the most valuable investments you can make in your practice. To keep the exploration grounded in your specific situation, please share a few details about your teaching context before we begin.</p>';
-  addMsg('ai', msg);
+function showContextWidget() {
+  addMsg('ai', '<p>To keep suggestions specific to your course, please fill in the four fields below and describe your teaching challenge or question in the box beneath.</p>');
 
   const inner = document.getElementById('chatInner');
   const w = document.createElement('div');
@@ -1166,36 +1142,9 @@ function showContextPrompt() {
     + '<option value="graduate">Graduate</option>'
     + '<option value="mixed levels">Mixed Levels</option>'
     + '</select></div>'
-    + '</div>'
-    + '<button class="ctx-submit" onclick="submitContext()">Continue →</button>';
+    + '</div>';
   inner.appendChild(w);
   scroll();
-}
-
-function submitContext() {
-  const d = document.getElementById('ctxDiscipline').value;
-  const s = document.getElementById('ctxSize').value;
-  const m = document.getElementById('ctxModality').value;
-  const l = document.getElementById('ctxLevel').value;
-  teachingContext = {discipline:d, size:s, modality:m, level:l};
-  contextSubmitted = true;
-
-  const parts = [];
-  if (d) parts.push('Discipline: ' + d);
-  if (s) parts.push('Class size: ' + s);
-  if (m) parts.push('Modality: ' + m);
-  if (l) parts.push('Course level: ' + l);
-  const ctxText = parts.length
-    ? 'My teaching context — ' + parts.join(' · ')
-    : 'Teaching context: not specified.';
-
-  const widget = document.getElementById('ctxWidget');
-  if (widget) widget.remove();
-
-  history.push({role:'user', content:ctxText});
-  displayLog.push({role:'user', text:ctxText});
-  addMsg('user', '<p>' + ctxText + '</p>');
-  callNEB();
 }
 
 // ── SUMMARY ────────────────────────────────────────────────
@@ -1517,7 +1466,31 @@ async function send() {
   }
   ta.value=''; resize(ta);
   document.getElementById('sendBtn').disabled = true;
-  clearModeConfirm();
+
+  if (!contextSubmitted) {
+    const d = document.getElementById('ctxDiscipline')?.value || '';
+    const s = document.getElementById('ctxSize')?.value || '';
+    const m = document.getElementById('ctxModality')?.value || '';
+    const l = document.getElementById('ctxLevel')?.value || '';
+    teachingContext = {discipline:d, size:s, modality:m, level:l};
+    contextSubmitted = true;
+
+    const parts = [];
+    if (d) parts.push('Discipline: ' + d);
+    if (s) parts.push('Class size: ' + s);
+    if (m) parts.push('Modality: ' + m);
+    if (l) parts.push('Course level: ' + l);
+    const ctxText = parts.length
+      ? 'My teaching context — ' + parts.join(' · ')
+      : 'Teaching context: not specified.';
+
+    const widget = document.getElementById('ctxWidget');
+    if (widget) widget.remove();
+
+    history.push({role:'user', content:ctxText});
+    displayLog.push({role:'user', text:ctxText});
+    addMsg('user', '<p>' + ctxText + '</p>');
+  }
 
   const attachment = attachedFile;
   removeAttachment();
@@ -1543,11 +1516,6 @@ async function send() {
     : md(text);
   addMsg('user', displayHtml);
 
-  if (!contextSubmitted) {
-    showContextPrompt();
-    document.getElementById('sendBtn').disabled = false;
-    return;
-  }
   await callNEB();
 }
 
@@ -1578,6 +1546,7 @@ async function callNEB() {
     displayLog.push({role:'ai', text:reply});
     hideTyping(); addMsg('ai', md(reply), reply);
     if (!hasRec) { hasRec=true; document.getElementById('sumBar').classList.add('on'); }
+    document.getElementById('deepenBtn').style.display = (currentMode === 'quickfix' && hasRec) ? '' : 'none';
   } catch(e) {
     clearTimeout(timeout);
     hideTyping();
@@ -1596,12 +1565,26 @@ async function callNEB() {
 
 // useStarter removed — mode selection replaces starter prompts
 
+function goDeeper() {
+  currentMode = 'explore';
+  const badge = document.getElementById('modeBadge');
+  if (badge) {
+    badge.textContent = 'Explore Solutions';
+    badge.className = 'mode-badge on ex';
+  }
+  const ta = document.getElementById('chatTa');
+  if (ta) ta.placeholder = "Describe the teaching challenge you'd like to explore in depth…";
+  document.getElementById('deepenBtn').style.display = 'none';
+  addMsg('ai', '<p>Switching to <strong>Explore Solutions</strong> — let’s think through this further, building on what we’ve already discussed.</p>');
+}
+
 function newConsult() {
   if (history.length && !confirm('Start a new consultation? The current conversation will be cleared.')) return;
   history=[]; displayLog=[]; teachingContext={}; currentMode=null; contextSubmitted=false; hasRec=false;
   removeAttachment();
   document.getElementById('inputZone').classList.add('hidden');
   document.getElementById('sumBar').classList.remove('on');
+  document.getElementById('deepenBtn').style.display = 'none';
   const badge = document.getElementById('modeBadge');
   badge.className = 'mode-badge';
   badge.textContent = '';
